@@ -1,5 +1,3 @@
-#include "config.h"
-
 #include "ncurses.h"
 
 #include "stdio.h"
@@ -50,24 +48,6 @@ bool get_updating_visualizer() {
 
     return true;
 }
-
-/*hostname
-os
-kernel
-uptime
-packages
-shell
-display
-terminal
-cpu
-gpu
-memory
-swap
-disk
-local-ip
-battery
-locale
-*/
 
 int string_to_module_num(const char *string) {
     if (strcmp(string, "hostname") == 0)

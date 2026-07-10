@@ -1,28 +1,9 @@
-/*hostname
-os
-kernel
-uptime
-packages
-shell
-display
-terminal
-cpu
-gpu
-memory
-swap
-disk
-local-ip
-battery
-locale
-*/
-
 #include "ncurses.h"
 #include "panel.h"
 
 #include "string.h"
 #include "unistd.h"
 
-#include "common.h"
 #include "config.h"
 #include "sysinfo.h"
 

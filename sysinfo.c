@@ -1,6 +1,5 @@
 #include "sys/sysctl.h"
 #include "sysinfo.h"
-#include "common.h"
 #include "string.h"
 #include "stdio.h"
 #include "stdlib.h"
