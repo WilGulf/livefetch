@@ -5,14 +5,14 @@ COLOR: WHITE
                l  "
      .;loddo:.  .olloddol;.
    cK          NW          0:
- $2.K                       Wd.
+ .K                       Wd.
  X                       X.
-$3;                        :
+;                        :
 :                        :
-$4.                        X.
+.                        X.
  k                        Wd.
- $5'X                          k
+ 'X                          k
   'X                        K.
-    $6k                      d
+    k                      d
      ;K       WXXW       k.
        "cooc*"    "*coo'"

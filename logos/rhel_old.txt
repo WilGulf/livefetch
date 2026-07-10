@@ -8,8 +8,8 @@ COLOR: RED
      `://////:-.`    :///////::///:`
        .-/////////:---/////////////:
           .-://////////////////////.
-$2         yMN+`.-$1::///////////////-`
-$2      .-`:NMMNMs`  `..-------..`
+         yMN+`.-::///////////////-`
+      .-`:NMMNMs`  `..-------..`
        MN+/mMMMMMhoooyysshsss
 MMM    MMMMMMMMMMMMMMyyddMMM+
  MMMM   MMMMMMMMMMMMMNdyNMMh`     hyhMMM
