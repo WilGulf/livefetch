@@ -121,7 +121,11 @@ int parse_config(const char *path) {
                         entries++;
                         done = true;
                         break;
-                    } else if (line[i] != ' ') {
+                    } else if (line[i] == '}') {
+                        is_table = false;
+                        done = true;
+                        break;
+                    }else if (line[i] != ' ') {
                         temp[j] = line[i];
                         j++;
                     }
