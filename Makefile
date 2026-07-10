@@ -1,8 +1,8 @@
 CC = cc
-CFLAGS = -Wall -Wextra -std=c17 -O2
+CFLAGS = -Wall -Wextra -std=c17 -O2 -lncurses
 
 TARGET = livefetch
-SRC = main.c
+SRC = main.c config.c common.c sysinfo.c
 
 all: $(TARGET)
 
