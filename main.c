@@ -271,6 +271,8 @@ int main(int argc, char *argv[]) {
                     while (line[i]) {
                         if (line[i] != '\n') {
                             color[color_i] = line[i];
+                        } else {
+                            color[color_i] = '\0';
                         }
                         color_i++;
                         i++;
