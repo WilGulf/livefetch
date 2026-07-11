@@ -8,6 +8,24 @@
 #include "config.h"
 #include "sysinfo.h"
 
+#define MAJOR_VERSION 0
+#define MINOR_VERSION 1
+#define VERSION_PATCH 0
+
+#ifdef __i386__
+    #define ARCH "i386"
+#elif defined(__x86_64__)
+    #define ARCH "x86_64"
+#elif defined(__arm__)
+    #define ARCH "arm"
+#elif defined(__aarch64__)
+    #define ARCH "aarch64"
+#elif defined(__riscv)
+    #define ARCH "RISC-V"
+#elif defined(__powerpc__)
+    #define ARCH "PowerPC"
+#endif
+
 struct sysinfo system_info;
 
 int modules_array[32];
@@ -208,25 +226,56 @@ const char* module(int num, bool is_updating, int color) {
 int modules = 0;
 
 int main(int argc, char *argv[]) {
+    for (int args_i = 0; args_i < argc; args_i++) {
+        if ((strcmp(argv[args_i], "-h") == 0) || (strcmp(argv[args_i], "--help") == 0)) {
+            printf("Livefetch is a fastfetch-like tool for fetching system information live in a pretty way\n");
+            printf("\n");
+            printf("\033[1;4mUsage:\033[0m\033[1m livefetch\033[0m <?options>\n");
+            printf("\n");
+            printf("\033[1;4mOptions:\033[0m\n");
+            printf("\033[1m   -h, --help     \033[0m");
+            printf("Show this help message\n");
+            printf("\033[1m   -v, --version  \033[0m");
+            printf("Show the full Livefetch version\n");
+            printf("\033[1m   -l, --logo     \033[0m");
+            printf("Set the logo source. Use 'none' to disable logo output\n");
+            printf("\033[1m   -c, --config   \033[0m");
+            printf("Specify the config file to load\n");
+            return 1;
+        } else if ((strcmp(argv[args_i], "-v") == 0) || (strcmp(argv[args_i], "--version") == 0)) {
+            printf("Livefetch %d.%d.%d (%s)\n", MAJOR_VERSION, MINOR_VERSION, VERSION_PATCH, ARCH);
+            return 1;
+        }
+    }
+
     // INIT //
     initscr();
     start_color();
     use_default_colors();
 
     init_pair(1, COLOR_WHITE, -1);
-    init_pair(2, COLOR_MAGENTA, -1);
+    init_pair(2, COLOR_WHITE, -1);
     init_pair(3, COLOR_BLACK, -1);
 
     // CONFIG //
+    bool config_arg = false;
+    for (int args_i = 0; args_i < argc; args_i++) {
+        if ((strcmp(argv[args_i], "-c") == 0) || (strcmp(argv[args_i], "--config") == 0)) {
+            parse_config(argv[args_i + 1]);
+            config_arg = true;
+        }
+    }
+    if (!config_arg) {
+        parse_config("livefetch.conf");
+    }
 
-    parse_config("livefetch.conf");
     bool updating_visualizer = get_updating_visualizer();
 
     // LOGO //
     FILE* file;
     bool logo_arg = false;
     for (int args_i = 0; args_i < argc; args_i++) {
-        if (strcmp(argv[args_i], "-l") == 0) {
+        if ((strcmp(argv[args_i], "-l") == 0) || (strcmp(argv[args_i], "--logo") == 0)) {
             file = fopen(get_logo(argv[args_i + 1]), "r");
             logo_arg = true;
         }
@@ -328,7 +377,7 @@ int main(int argc, char *argv[]) {
                 }
             }
 
-            for (; chars_displayed < longest_line + 5; chars_displayed++) {
+            for (; chars_displayed < ((longest_line > 0) ? longest_line + 5 : 0); chars_displayed++) {
                 printw(" ");
             }
 

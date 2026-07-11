@@ -23,6 +23,9 @@ const char* get_logo(char *arg_logo) {
 
     if (strcmp(logo, "default") == 0) {
         return "logos/macos2.txt";
+    if (strcmp(logo, "none") == 0) {
+        return NULL;
+    }
     } else {
         int j = 0;
         while (logo[j]) {
