@@ -250,6 +250,7 @@ int main(int argc, char *argv[]) {
 
     char logo[64][256];
     char line[256];
+    int longest_line = 0;
     int lines = 0;
     if (file != NULL) {
         while (fgets(line, sizeof(line), file)) {
@@ -297,6 +298,9 @@ int main(int argc, char *argv[]) {
                 lines++;
             } else {
                 strcpy(logo[lines - 1], line);
+                if (strlen(logo[lines - 1]) > longest_line) {
+                    longest_line = strlen(logo[lines -1]);
+                }
                 lines++;
             }
         }
@@ -324,7 +328,7 @@ int main(int argc, char *argv[]) {
                 }
             }
 
-            for (; chars_displayed < 50; chars_displayed++) {
+            for (; chars_displayed < longest_line + 5; chars_displayed++) {
                 printw(" ");
             }
 
