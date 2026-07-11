@@ -9,24 +9,32 @@ char values[16][64];
 
 static int modules_array[32];
 
-const char* get_logo() {
-    for (int i = 0; i < 16; i++) {
-        if (strcmp(keys[i], "logo") == 0) {
-            if (strcmp(values[i], "default") == 0) {
-                return "logos/macos2.txt";
-            } else {
-                int j = 0;
-                while (values[i][j]) {
-                    if (values[i][j] == '/') {
-                        return values[i];
-                    }
-                    j++;
-                }
-                static char buffer[64];
-                snprintf(buffer, 64, "logos/%s.txt", values[i]);
-                return (const char *)buffer;
+const char* get_logo(char *arg_logo) {
+    char logo[64];
+    if (arg_logo != NULL) {
+        strcpy(logo, arg_logo);
+    } else {
+        for (int i = 0; i < 16; i++) {
+            if (strcmp(keys[i], "logo") == 0) {
+                strcpy(logo, values[i]);
             }
         }
+    }
+
+    if (strcmp(logo, "default") == 0) {
+        return "logos/macos2.txt";
+    } else {
+        int j = 0;
+        while (logo[j]) {
+            if (logo[j] == '/') {
+                return logo;
+            }
+            j++;
+        }
+
+        static char buffer[64];
+        snprintf(buffer, 64, "logos/%s.txt", logo);
+        return (const char *)buffer;
     }
 
     return "logos/macos2.txt";

@@ -3,6 +3,7 @@
 
 #include "string.h"
 #include "unistd.h"
+#include "stdarg.h"
 
 #include "config.h"
 #include "sysinfo.h"
@@ -11,188 +12,244 @@ struct sysinfo system_info;
 
 int modules_array[32];
 
-void init_modules() {
+int init_modules() {
+    get_hostname(&system_info);
+    get_os(&system_info);
+    get_kernel(&system_info);
 
+    get_cpu(&system_info);
+    get_gpu(&system_info);
+
+    get_uptime(&system_info);
+
+    strcpy(system_info.shell, "bash");
+    strcpy(system_info.display, "4K @ 240hz");
+    strcpy(system_info.terminal, "kitty");
+    strcpy(system_info.gpu, "rtx5090 32gb");
+
+    system_info.memory_max = 6767;
+    system_info.memory_use = 4141;
+    system_info.swap_max = 6767;
+    system_info.swap_use = 4141;
+    system_info.disk_max = 6767;
+    system_info.disk_use = 4141;
+
+    strcpy(system_info.local_ip, "192.168.1.67");
+
+    system_info.battery = 67;
+
+    strcpy(system_info.locale, "swedish");
+
+    return 1;
 }
 
-const char* module(int num, bool is_updating) {
+void two_color_print(char *str, char *fmt, ...) {
+    va_list list;
+    va_start(list, fmt);
+
+    printw(str);
+    attron(COLOR_PAIR(1));
+    char buffer[256];
+    vsnprintf(buffer, sizeof(buffer) - 1, fmt, list);
+    printw(buffer);
+
+    va_end(list);
+}
+
+const char* module(int num, bool is_updating, int color) {
     if (is_updating) {
         switch (modules_array[num]) {
+            attron(COLOR_PAIR(color));
             case 1: {
-                strcpy(system_info.hostname, getHostname());
-                return system_info.hostname;
+                printw("%s", system_info.hostname);
+                break;
             }
             case 2: {
-                strcpy(system_info.os, "macos tahoe");
-                return system_info.os;
+                printw("OS: %s", system_info.os);
+                break;
             }
             case 3: {
-                strcpy(system_info.kernel, "darwin");
-                return system_info.kernel;
+                printw("Kernel: %s", system_info.kernel);
+                break;
             }
             case 4: {
-                system_info.uptime = 1;
-                static char formatted[64];
-                snprintf(formatted, sizeof(formatted), "Uptime: %d", system_info.uptime);
-                return formatted;
+                get_uptime(&system_info);
+                printw("Uptime: %s", system_info.uptime);
+                break;
             }
             case 5: {
                 system_info.package = 6767;
-                static char formatted[64];
-                snprintf(formatted, sizeof(formatted), "Packages Installed: %d", system_info.package);
-                return formatted;
+                printw("Packages Installed: %d", system_info.package);
+                break;
             }
             case 6: {
-                strcpy(system_info.shell, "bash");
-                return system_info.shell;
+                printw("Shell: %s", system_info.shell);
+                break;
             }
             case 7: {
-                strcpy(system_info.display, "4K @ 240hz");
-                return system_info.display;
+                printw("Display: %s", system_info.display);
+                break;
             }
             case 8: {
-                strcpy(system_info.terminal, "kitty");
-                return system_info.terminal;
+                printw("Terminal: %s", system_info.terminal);
+                break;
             }
             case 9: {
-                strcpy(system_info.cpu, "i9-14900K");
-                return system_info.cpu;
+                printw("CPU: %s", system_info.cpu);
+                break;
             }
             case 10: {
-                strcpy(system_info.gpu, "rtx5090 32gb");
-                return system_info.gpu;
+                printw("GPU: %s", system_info.gpu);
+                break;
             }
             case 11: {
                 system_info.memory_max = 6767;
                 system_info.memory_use = 4141;
-                static char formatted[64];
-                snprintf(formatted, sizeof(formatted), "Memory: %d/%d", system_info.memory_use, system_info.memory_max);
-                return formatted;
+                printw("Memory: %d/%d", system_info.memory_use, system_info.memory_max);
+                break;
             }
             case 12: {
                 system_info.swap_max = 6767;
                 system_info.swap_use = 4141;
-                static char formatted[64];
-                snprintf(formatted, sizeof(formatted), "Swap: %d/%d", system_info.swap_use, system_info.swap_max);
-                return formatted;
+                printw("Swap: %d/%d", system_info.swap_use, system_info.swap_max);
+                break;
             }
             case 13: {
                 system_info.disk_max = 6767;
                 system_info.disk_use = 4141;
-                static char formatted[64];
-                snprintf(formatted, sizeof(formatted), "Disk (/): %d/%d", system_info.disk_use, system_info.disk_max);
-                return formatted;
+                printw("Disk (/): %d/%d", system_info.disk_use, system_info.disk_max);
+                break;
             }
             case 14: {
-                system_info.local_ip = 192.168;
-                static char formatted[64];
-                snprintf(formatted, sizeof(formatted), "Local IP: %f", system_info.local_ip);
-                return formatted;
+                strcpy(system_info.local_ip, "192.168.1.67");
+                printw("Local IP: %s", system_info.local_ip);
+                break;
             }
             case 15: {
                 system_info.battery = 67;
-                static char formatted[64];
-                snprintf(formatted, sizeof(formatted), "Battery: %d%%", system_info.battery);
-                return formatted;
+                printw("Battery: %d%%", system_info.battery);
+                break;
             }
             case 16: {
                 strcpy(system_info.locale, "swedish");
-                return system_info.locale;
+                printw("System Locale: %s", system_info.locale);
+                break;
             }
             case 99: {
-                return "---------------";
+                attron(COLOR_PAIR(color));
+                printw("---------------");
+                break;
             }
             default: {
-                return "";
+                printw("");
+                break;;
             }
         }
     } else {
         switch (modules_array[num]) {
             case 1:
-                return system_info.hostname;
+                attron(COLOR_PAIR(color));
+                printw("%s", system_info.hostname);
+                break;
             case 2:
-                return system_info.os;
+                two_color_print("OS: ", "%s", system_info.os);
+                break;
             case 3:
-                return system_info.kernel;
+                two_color_print("Kernel: ", "%s", system_info.kernel);
+                break;
             case 4:
-                static char formatted[64];
-                snprintf(formatted, sizeof(formatted), "Uptime: %d", system_info.uptime);
-                return formatted;
-            case 5: {
-                static char formatted[64];
-                snprintf(formatted, sizeof(formatted), "Packages Installed: %d", system_info.package);
-                return formatted;
-            }
+                two_color_print("Uptime: ", "%s", system_info.uptime);
+                break;
+            case 5:
+                two_color_print("Packages Installed: ", "%d", system_info.package);
+                break;
             case 6:
-                return system_info.shell;
+                two_color_print("Shell: ", "%s", system_info.shell);
+                break;
             case 7:
-                return system_info.display;
+                two_color_print("Display: ", "%s", system_info.display);
+                break;
             case 8:
-                return system_info.terminal;
+                two_color_print("Terminal: ", "%s", system_info.terminal);
+                break;
             case 9:
-                return system_info.cpu;
+                two_color_print("CPU: ", "%s", system_info.cpu);
+                break;
             case 10:
-                return system_info.gpu;
-            case 11: {
-                static char formatted[64];
-                snprintf(formatted, sizeof(formatted), "Memory: %d/%d", system_info.memory_use, system_info.memory_max);
-                return formatted;
-            }
-            case 12: {
-                static char formatted[64];
-                snprintf(formatted, sizeof(formatted), "Swap: %d/%d", system_info.swap_use, system_info.swap_max);
-                return formatted;
-            }
-            case 13: {
-                static char formatted[64];
-                snprintf(formatted, sizeof(formatted), "Disk (/): %d/%d", system_info.disk_use, system_info.disk_max);
-                return formatted;
-            }
-            case 14: {
-                static char formatted[64];
-                snprintf(formatted, sizeof(formatted), "Local IP: %f", system_info.local_ip);
-                return formatted;
-            }
-            case 15: {
-                static char formatted[64];
-                snprintf(formatted, sizeof(formatted), "Battery: %d%%", system_info.battery);
-                return formatted;
-            }
+                two_color_print("GPU: ", "%s",  system_info.gpu);break;
+            case 11:
+                two_color_print("Memory: ", "%d/%d", system_info.memory_use, system_info.memory_max);
+                break;
+            case 12:
+                two_color_print("Swap: ", "%d/%d", system_info.swap_use, system_info.swap_max);
+                break;
+            case 13:
+                two_color_print("Disk (/): ", "%d/%d", system_info.disk_use, system_info.disk_max);
+                break;
+            case 14:
+                two_color_print("Local IP: ", "%s", system_info.local_ip);
+                break;
+            case 15:
+                two_color_print("Battery: ", "%d%%", system_info.battery);
+                break;
             case 16:
-                return system_info.locale;
+                two_color_print("System Locale: ", "%s", system_info.locale);
+                break;
             case 99:
-                return "---------------";
+                printw("---------------");
+                break;
             default:
-                return "";
+                printw("");
+                break;
         }
     }
 }
 
-int modules = 24;
+int modules = 0;
 
-int main() {
+int main(int argc, char *argv[]) {
+    // INIT //
     initscr();
     start_color();
-    use_default_colors(); 
+    use_default_colors();
 
     init_pair(1, COLOR_WHITE, -1);
     init_pair(2, COLOR_MAGENTA, -1);
     init_pair(3, COLOR_BLACK, -1);
 
-    parse_config("livefetch.conf");
+    // CONFIG //
 
+    parse_config("livefetch.conf");
     bool updating_visualizer = get_updating_visualizer();
 
-    for (int num = 0; num < 32; num++) {
-        modules_array[num] = get_module(num);
+    // LOGO //
+    FILE* file;
+    bool logo_arg = false;
+    for (int args_i = 0; args_i < argc; args_i++) {
+        if (strcmp(argv[args_i], "-l") == 0) {
+            file = fopen(get_logo(argv[args_i + 1]), "r");
+            logo_arg = true;
+        }
+    }
+    if (!logo_arg) {
+        file = fopen(get_logo(NULL), "r");
     }
 
-    FILE* file = fopen(get_logo(), "r");
+    // MODULES //
+    for (int num = 0; num < 32; num++) {
+        if (get_module(num) != 0) {
+            modules_array[num] = get_module(num);
+            modules++;
+        }
+    }
+
+    init_modules();
 
     clear();
 
+
+    char logo[64][256];
     char line[256];
-    char logo[modules][256];
     int lines = 0;
     if (file != NULL) {
         while (fgets(line, sizeof(line), file)) {
@@ -237,7 +294,7 @@ int main() {
 
                 lines++;
             } else {
-                strcpy(logo[lines -1 ], line);
+                strcpy(logo[lines - 1], line);
                 lines++;
             }
         }
@@ -248,7 +305,7 @@ int main() {
     int line_to_update = 0;
     while (1) {
         int i = 0;
-        for (; i < modules;) {
+        for (; i < ((lines > modules) ? lines : modules);) {
             attron(COLOR_PAIR((i == line_to_update && updating_visualizer) ? 3 : 2));
             
             int chars_displayed = 0;
@@ -269,9 +326,7 @@ int main() {
                 printw(" ");
             }
 
-            attron(COLOR_PAIR((i == line_to_update && updating_visualizer) ? 3 : 1));
-
-            printw("%s", module(i, (i == line_to_update)));
+            module(i, (i == line_to_update), (i == line_to_update && updating_visualizer) ? 3 : 1);
             printw("\n");
 
             i++;
@@ -280,7 +335,7 @@ int main() {
         refresh();
         move(0, 0);
 
-        if (line_to_update < modules) {
+        if (line_to_update < ((lines > modules) ? lines : modules)) {
             line_to_update++;
         } else {
             line_to_update = 0;
