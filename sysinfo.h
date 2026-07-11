@@ -5,7 +5,7 @@ struct sysinfo {
     char hostname[256];
     char os[256];
     char kernel[256];
-    int uptime;
+    char uptime[256];
     int package;
     char shell[256];
     char display[256];
@@ -18,13 +18,18 @@ struct sysinfo {
     int swap_use;
     int disk_max;
     int disk_use;
-    float local_ip;
+    char local_ip[256];
     int battery;
     char locale[256];
 };
 
+void get_hostname(struct sysinfo *info);
+void get_os(struct sysinfo *info);
+void get_kernel(struct sysinfo *info);
 
-const char* getHostname();
-const char* getKernel();
+void get_uptime(struct sysinfo *info);
+
+void get_cpu(struct sysinfo *info);
+void get_gpu(struct sysinfo *info);
 
 #endif
