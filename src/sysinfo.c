@@ -8,6 +8,7 @@
 #elif defined(__APPLE__)
     #include "stdlib.h"
     #include "sys/sysctl.h"
+    #include "time.h"
 #endif
 
 void get_command_out(char *cmd, char *buffer) {
@@ -60,7 +61,35 @@ void get_kernel(struct sysinfo *info) {
 }
 
 void get_uptime(struct sysinfo *info) {
+    struct timespec ts;
+    clock_gettime(CLOCK_MONOTONIC, &ts);
+    double time = ts.tv_sec + ts.tv_nsec / 1e9;
     
+    int64_t seconds = time;
+    int64_t minutes = seconds / 60;
+    int hours = minutes / 60;
+    int days = hours / 24;
+
+    char char_sec[32] = "";
+    char char_min[32] = "";
+    char char_h[32] = "";
+    char char_day[32] = "";
+    if (minutes > 0) {
+        seconds -= (minutes * 60);
+    }
+    if (hours > 0) {
+        minutes -= (hours * 60);
+    }
+    if (days > 0) {
+        hours -= (days * 24);
+    }
+
+    snprintf(char_sec, sizeof(char_sec), " %d Seconds", seconds);
+    snprintf(char_min, sizeof(char_min), " %d Minutes,", minutes);
+    snprintf(char_h, sizeof(char_h), " %d Hours,", hours);
+    snprintf(char_day, sizeof(char_day), " %d Days,", days);
+
+    snprintf(info->uptime, sizeof(info->uptime), "%s%s%s%s", char_day, char_h, char_min, char_sec);
 }
 
 void get_cpu(struct sysinfo *info) {

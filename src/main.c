@@ -92,7 +92,7 @@ const char* module(int num, bool is_updating, int color) {
             }
             case 4: {
                 get_uptime(&system_info);
-                printw("Uptime: %s", system_info.uptime);
+                printw("Uptime:%s", system_info.uptime);
                 break;
             }
             case 5: {
@@ -176,7 +176,7 @@ const char* module(int num, bool is_updating, int color) {
                 two_color_print("Kernel: ", "%s", system_info.kernel);
                 break;
             case 4:
-                two_color_print("Uptime: ", "%s", system_info.uptime);
+                two_color_print("Uptime:", "%s", system_info.uptime);
                 break;
             case 5:
                 two_color_print("Packages Installed: ", "%d", system_info.package);
@@ -266,7 +266,7 @@ int main(int argc, char *argv[]) {
         }
     }
     if (!config_arg) {
-        parse_config("livefetch.conf");
+        parse_config("default.conf");
     }
 
     bool updating_visualizer = get_updating_visualizer();
