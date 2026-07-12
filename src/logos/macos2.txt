@@ -1,5 +1,4 @@
-COLOR: WHITE
-                     ..'
+$7                     ..'
                  ,xN  .
                .O    o
                l  "

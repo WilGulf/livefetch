@@ -12,6 +12,18 @@
 #define MINOR_VERSION 1
 #define VERSION_PATCH 0
 
+#define RED 1
+#define GREEN 2
+#define YELLOW 3
+#define BLUE 4
+#define MAGENTA 5
+#define CYAN 6
+#define WHITE 7
+#define BLACK 8
+
+#define UPDATE 8
+#define TEXT 7
+
 #ifdef __i386__
     #define ARCH "i386"
 #elif defined(__x86_64__)
@@ -66,7 +78,7 @@ void two_color_print(char *str, char *fmt, ...) {
     va_start(list, fmt);
 
     printw(str);
-    attron(COLOR_PAIR(1));
+    attron(COLOR_PAIR(WHITE));
     char buffer[256];
     vsnprintf(buffer, sizeof(buffer) - 1, fmt, list);
     printw(buffer);
@@ -164,9 +176,10 @@ const char* module(int num, bool is_updating, int color) {
             }
         }
     } else {
+        attron(COLOR_PAIR(color));
         switch (modules_array[num]) {
             case 1:
-                attron(COLOR_PAIR(color));
+                attron(COLOR_PAIR(WHITE));
                 printw("%s", system_info.hostname);
                 break;
             case 2:
@@ -214,6 +227,7 @@ const char* module(int num, bool is_updating, int color) {
                 two_color_print("System Locale: ", "%s", system_info.locale);
                 break;
             case 99:
+                attron(COLOR_PAIR(color));
                 printw("---------------");
                 break;
             default:
@@ -224,6 +238,7 @@ const char* module(int num, bool is_updating, int color) {
 }
 
 int modules = 0;
+int main_color = 7;
 
 int main(int argc, char *argv[]) {
     for (int args_i = 0; args_i < argc; args_i++) {
@@ -252,10 +267,14 @@ int main(int argc, char *argv[]) {
     initscr();
     start_color();
     use_default_colors();
-
-    init_pair(1, COLOR_WHITE, -1);
-    init_pair(2, COLOR_WHITE, -1);
-    init_pair(3, COLOR_BLACK, -1);
+    init_pair(RED, COLOR_RED, -1);
+    init_pair(GREEN, COLOR_GREEN, -1);
+    init_pair(YELLOW, COLOR_YELLOW, -1);
+    init_pair(BLUE, COLOR_BLUE, -1);
+    init_pair(MAGENTA, COLOR_MAGENTA, -1);
+    init_pair(CYAN, COLOR_CYAN, -1);
+    init_pair(WHITE, COLOR_WHITE, -1);
+    init_pair(BLACK, COLOR_BLACK, -1);
 
     // CONFIG //
     bool config_arg = false;
@@ -296,92 +315,97 @@ int main(int argc, char *argv[]) {
 
     clear();
 
-
+    // LOAD LOGO //
     char logo[64][256];
     char line[256];
     int longest_line = 0;
     int lines = 0;
     if (file != NULL) {
         while (fgets(line, sizeof(line), file)) {
-            if (lines == 0) {
-                bool is_color = true;
-                char identifier[7] = "COLOR:";
-                int i = 0;
-                for (; i < 6; i++) {
-                    if (identifier[i] != line[i]) {
-                        is_color = false;
-                    }
+            bool is_color_line = false;
+            int i = 0;
+            char identifier[] = "MAIN_COLOR=";
+            for (; i < (strlen(identifier)); i++) {
+                if (line[i] == identifier[i]) {
+                    is_color_line = true;
+                } else {
+                    is_color_line = false;
+                }
+            }
+
+            if (is_color_line) {
+                char color[32];
+                int j = 0;
+                while (line[i] && line[i] != '\n') {
+                    color[j] = line[i];
+                    j++;
+                    i++;
                 }
 
-                i++;
+                if (strcmp(color, "BLACK") == 0)
+                    main_color = BLACK;
+                else if (strcmp(color, "RED") == 0)
+                    main_color = RED;
+                else if (strcmp(color, "GREEN") == 0)
+                    main_color = GREEN;
+                else if (strcmp(color, "YELLOW") == 0)
+                    main_color = YELLOW;
+                else if (strcmp(color, "BLUE") == 0)
+                    main_color = BLUE;
+                else if (strcmp(color, "MAGENTA") == 0)
+                    main_color = MAGENTA;
+                else if (strcmp(color, "CYAN") == 0)
+                    main_color = CYAN;
+                else if (strcmp(color, "WHITE") == 0)
+                    main_color = WHITE;
 
-                char color[16];
-                if (is_color) {
-                    int color_i = 0;
-                    while (line[i]) {
-                        if (line[i] != '\n') {
-                            color[color_i] = line[i];
-                        } else {
-                            color[color_i] = '\0';
-                        }
-                        color_i++;
-                        i++;
-                    }
-
-                    if (strcmp(color, "RED") == 0)
-                        init_pair(2, COLOR_RED, -1);
-                    else if (strcmp(color, "GREEN") == 0)
-                        init_pair(2, COLOR_GREEN, -1);
-                    else if (strcmp(color, "YELLOW") == 0)
-                        init_pair(2, COLOR_YELLOW, -1);
-                    else if (strcmp(color, "BLUE") == 0)
-                        init_pair(2, COLOR_BLUE, -1);
-                    else if (strcmp(color, "MAGENTA") == 0)
-                        init_pair(2, COLOR_MAGENTA, -1);
-                    else if (strcmp(color, "CYAN") == 0)
-                        init_pair(2, COLOR_CYAN, -1);
-                    else
-                        init_pair(2, COLOR_WHITE, -1);
-                }
-
-                lines++;
             } else {
-                strcpy(logo[lines - 1], line);
-                if (strlen(logo[lines - 1]) > longest_line) {
-                    longest_line = strlen(logo[lines -1]);
+                strcpy(logo[lines], line);
+
+                if (strlen(line) > longest_line) {
+                    longest_line = strlen(line);
                 }
+
                 lines++;
             }
+            is_color_line = false;
         }
-
-        lines--;
     }
 
     int line_to_update = 0;
     while (1) {
         int i = 0;
-        for (; i < ((lines > modules) ? lines : modules);) {
-            attron(COLOR_PAIR((i == line_to_update && updating_visualizer) ? 3 : 2));
-            
+        for (; i < ((lines > modules) ? lines : modules);) {            
             int chars_displayed = 0;
             if (i < lines) {
                 int j = 0;
                 while (logo[i][j]) {
                     if (logo[i][j] != '\n') {
-                        printw("%c", logo[i][j]);
+                        if (logo[i][j] == '$') {
+                            if (!(i == line_to_update && updating_visualizer)) {
+                                attron(COLOR_PAIR((logo[i][j + 1] - '0')));
+                            } else {
+                                attron(COLOR_PAIR(BLACK));
+                            }
+
+                            j++;
+                            j++;
+                        } else {
+                            printw("%c", logo[i][j]);
+                            chars_displayed++;
+                        }
                     } else {
                         chars_displayed--;
                     }
-                    chars_displayed++;
                     j++;
                 }
             }
 
-            for (; chars_displayed < ((longest_line > 0) ? longest_line + 5 : 0); chars_displayed++) {
+            for (; chars_displayed < ((longest_line > 0) ? longest_line + 2 : 0); chars_displayed++) {
                 printw(" ");
             }
 
-            module(i, (i == line_to_update), (i == line_to_update && updating_visualizer) ? 3 : 1);
+            module(i, (i == line_to_update), (i == line_to_update && updating_visualizer) ? BLACK : main_color);
             printw("\n");
 
             i++;

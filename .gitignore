@@ -2,4 +2,4 @@
 */*/*.o
 default.conf
 livefetch
-logos/
+./logos/

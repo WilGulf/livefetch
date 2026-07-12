@@ -11,7 +11,7 @@ all: $(TARGET)
 
 $(TARGET): $(OBJ)
 	$(CC) $(CFLAGS) $(OBJ) -o $@
-	cp -r src/logos ./
+	#cp -r src/logos ./
 	cp src/default.conf ./
 %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@

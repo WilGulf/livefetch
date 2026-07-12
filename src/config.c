@@ -22,7 +22,7 @@ const char* get_logo(char *arg_logo) {
     }
 
     if (strcmp(logo, "default") == 0) {
-        return "logos/macos2.txt";
+        return "src/logos/macos2.txt";
     if (strcmp(logo, "none") == 0) {
         return NULL;
     }
@@ -36,11 +36,11 @@ const char* get_logo(char *arg_logo) {
         }
 
         static char buffer[64];
-        snprintf(buffer, 64, "logos/%s.txt", logo);
+        snprintf(buffer, 64, "src/logos/%s.txt", logo);
         return (const char *)buffer;
     }
 
-    return "logos/macos2.txt";
+    return "src/logos/macos2.txt";
 }
 
 bool get_updating_visualizer() {
