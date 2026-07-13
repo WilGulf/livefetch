@@ -1,0 +1,18 @@
+MAIN_COLOR=RED
+$7        _,metSSSSSgg.
+$7     ,gSSSSSSSSSSSSSSSP.
+$7   ,gSSP""       """YSS.".
+$7  ,SSP'              `SSS.
+$7',SSP       ,ggs.     `SSb:
+$7`dSS'     ,SP"'   $1.$7    SSS
+$7 SSP      dS'     $1,$7    SSP
+$7 SS:      SS.   $1-$7    ,dSS'
+$7 SS;      YSb._   _,dSP'
+$7 YSS.    $1`.$7`"YSSSSP"'
+$7 `SSb      $1"-.__
+$7  `YSSb
+$7   `YSS.
+$7     `SSb.
+$7       `YSSb.
+$7         `"YSb._
+$7             `""""

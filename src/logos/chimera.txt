@@ -10,9 +10,9 @@ $4dddddo.  $1;ccc.          ............
        $1.ccc.           cccccccccccc
 $5......  $1.ccc.          .ccc'''''''''
 $5OOOOOk.  $1;ccc.        .ccc;   ......
-$5OOOOOOd   $1'ccc:,....,:ccc'   $1cooooooo
-$5OOOOOOOx.   $1':cccccccc:'   $1.loooooooo
-$5OOOOOOOOOd,     $1`'''`     $1.cooooooooo
+$5OOOOOOd   $1'ccc:,....,:ccc'   $1coooooo
+$5OOOOOOOx.   $1':cccccccc:'   $1.looooooo
+$5OOOOOOOOOd,     $1`'''`     $1.coooooooo
 $5OOOOOOOOOOOOdc,.    $1..,coooooooooooo
 $5OOOOOOOOOOOOOOOO'  $1.oooooooooooooooo
 $5OOOOOOOOOOOOOOOO'  $1.oooooooooooooooo

@@ -1,0 +1,20 @@
+MAIN_COLOR=GREEN
+$7            _.-ppOOOOOOqq-._
+$7         .oOOOOPPPPPPPPPPOOOOo.
+$7      .oOOOO$2.=oOOOOOOOOOOo=.$7OOOOo.
+$7    .:OOO$2.=oOOOOOOOOOOOOOOOOo=.$7OOO:.
+$7   .OOO$2.OOOOOOOOOOOOOOOOOOOOOOOO.$7OOO.
+$7  .OOO$2.OO    OOO:"   "::"    ":OOO.$7OO:
+$7 .OOO$2.OOO    OO                OOO.$7OOO:
+$7 OOO$2.OOOO    OO    oo    oo    OOOO.$7OOO
+$7:OOO$2:OOOO    OO    OO    OO    OOOO:$7OOO:
+$7:OOO$2:OOOO    OO    OO    OO    OOOO:$7OOO:
+$7'OOO$2'OOOO    OO    OO    OO    OOOO'$7OOO'
+$7 OOO$2'OOOO    OO____OO____OO    OOOO'$7OOO'
+$7 'OOO$2'OOO    'OOOOOOOOOOOO'    OOOO'$7OOO
+$7  'OOO$2'OOO                    .OOO'$7OOO'
+$7   'OOO$2'OOOO:ooooooooooooooo:OOOO'$7OOO'
+$7    ':OOOo$2'=OOOOOOOOOOOOOOOOO='$7oOOO:'
+$7      ':OOOOo$2'=OOOOOOOOOOO='$7oOOOO:'
+$7         ``-OOOOooooooooooOOOO-´´
+$7             ```-=:OOOO:=-´´´

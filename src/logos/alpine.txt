@@ -1,3 +1,4 @@
+MAIN_COLOR=BLUE
 $4       .hddddddddddddddddddddddh.
 $4      :dddddddddddddddddddddddddd:
 $4     /dddddddddddddddddddddddddddd/

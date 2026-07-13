@@ -1,0 +1,20 @@
+MAIN_COLOR=BLUE
+$4             .',;::::;,'.
+$4         .';:cccccccccccc:;,.
+$4      .;cccccccccccccccccccccc;.
+$4    .:cccccccccccccccccccccccccc:.
+$4  .;ccccccccccccc;.$7:dddl:$4.;ccccccc;.
+$4 .:ccccccccccccc;$7OWMKOOXMWd$4;ccccccc:.
+$4.:ccccccccccccc;$7KMMc$4;cc;$7xMM$4c;ccccccc:.
+$4,cccccccccccccc;$7MMM.$4;cc;;$7WW$4:;cccccccc,
+$4:cccccccccccccc;$7MMM.$4;cccccccccccccccc:
+$4:ccccccc;$7oxOOOo$4;$7MMM000k.$4;cccccccccccc:
+$4cccccc;$70MMKxdd$4:;$7MMMkddc.$4;cccccccccccc;
+$4ccccc;$7XMO'$4;cccc;$7MMM$4.;cccccccccccccccc'
+$4ccccc;$7MMo$4;ccccc;$7MMW$4.;ccccccccccccccc;
+$4ccccc;$70MNc$4.ccc.$7xMMd$4;ccccccccccccccc;
+$4cccccc;$7dNMWXXXWM0$4:;cccccccccccccc:,
+$4cccccccc;.$7:odl:$4.;cccccccccccccc:,.
+$4ccccccccccccccccccccccccccccc:'.
+$4:ccccccccccccccccccccccc:;,..
+$4 ':cccccccccccccccc::;,.

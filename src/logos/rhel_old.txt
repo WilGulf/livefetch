@@ -1,16 +1,17 @@
+MAIN_COLOR=RED
 $1             `.-..........`
-            `////////::.`-/.
-            -: ....-////////.
-            //:-::///////////`
-     `--::: `-://////////////:
-     //////-    ``.-:///////// .`
-     `://////:-.`    :///////::///:`
-       .-/////////:---/////////////:
-          .-://////////////////////.
-         yMN+`.-::///////////////-`
-      .-`:NMMNMs`  `..-------..`
-       MN+/mMMMMMhoooyysshsss
-MMM    MMMMMMMMMMMMMMyyddMMM+
- MMMM   MMMMMMMMMMMMMNdyNMMh`     hyhMMM
-  MMMMMMMMMMMMMMMMyoNNNMMM+.   MMMMMMMM
-   MMNMMMNNMMMMMNM+ mhsMNyyyyMNMMMMsMM
+$1            `////////::.`-/.
+$1            -: ....-////////.
+$1            //:-::///////////`
+$1     `--::: `-://////////////:
+$1     //////-    ``.-:///////// .`
+$1     `://////:-.`    :///////::///:`
+$1       .-/////////:---/////////////:
+$1          .-://////////////////////.
+$1         yMN+`.-::///////////////-`
+$1      .-`:NMMNMs`  `..-------..`
+$1       MN+/mMMMMMhoooyysshsss
+$1MMM    MMMMMMMMMMMMMMyyddMMM+
+$1 MMMM   MMMMMMMMMMMMMNdyNMMh`     hyhMMM
+$1  MMMMMMMMMMMMMMMMyoNNNMMM+.   MMMMMMMM
+$1   MMNMMMNNMMMMMNM+ mhsMNyyyyMNMMMMsMM

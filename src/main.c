@@ -330,11 +330,12 @@ int main(int argc, char *argv[]) {
                     is_color_line = true;
                 } else {
                     is_color_line = false;
+                    break;
                 }
             }
 
             if (is_color_line) {
-                char color[32];
+                char color[32] = "";
                 int j = 0;
                 while (line[i] && line[i] != '\n') {
                     color[j] = line[i];
@@ -360,10 +361,20 @@ int main(int argc, char *argv[]) {
                     main_color = WHITE;
 
             } else {
+                int j = 0;
+                int color_counter = 0;
+                int prev_longest = longest_line;
+                while (line[j]) {
+                    if (line[j] == '$') {
+                        color_counter++;
+                    }
+                    //logo[lines][j] = line[j];
+                    j++;
+                }
                 strcpy(logo[lines], line);
 
-                if (strlen(line) > longest_line) {
-                    longest_line = strlen(line);
+                if (strlen(line) - (2 * color_counter) > prev_longest) {
+                    longest_line = strlen(line) - (2 * color_counter);            
                 }
 
                 lines++;
@@ -374,10 +385,16 @@ int main(int argc, char *argv[]) {
 
     int line_to_update = 0;
     while (1) {
+        erase();
+
         int i = 0;
-        for (; i < ((lines > modules) ? lines : modules);) {            
+        for (; i < ((lines > modules) ? lines : modules);) {       
             int chars_displayed = 0;
             if (i < lines) {
+                for (int times = 0; times < 3; times++) {
+                    printw(" ");
+                }
+
                 int j = 0;
                 while (logo[i][j]) {
                     if (logo[i][j] != '\n') {
@@ -388,7 +405,7 @@ int main(int argc, char *argv[]) {
                                 attron(COLOR_PAIR(BLACK));
                             }
 
-                            j++;
+                            //
                             j++;
                         } else {
                             printw("%c", logo[i][j]);
@@ -401,7 +418,7 @@ int main(int argc, char *argv[]) {
                 }
             }
 
-            for (; chars_displayed < ((longest_line > 0) ? longest_line + 2 : 0); chars_displayed++) {
+            for (; chars_displayed < ((longest_line > 0) ? longest_line + 5 : 0); chars_displayed++) {
                 printw(" ");
             }
 

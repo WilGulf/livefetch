@@ -1,17 +1,18 @@
-$7                     ..'
-                 ,xN  .
-               .O    o
-               l  "
-     .;loddo:.  .olloddol;.
-   cK          NW          0:
- .K                       Wd.
- X                       X.
-;                        :
-:                        :
-.                        X.
- k                        Wd.
- 'X                          k
-  'X                        K.
-    k                      d
-     ;K       WXXW       k.
-       "cooc*"    "*coo'"
+MAIN_COLOR=YELLOW
+$2                     ..'
+$2                 ,xN  .
+$2               .O    o
+$2               l  "
+$2     .;loddo:.  .olloddol;.
+$2   cK          NW          0:
+$3 .K                       Wd.
+$3 X                       X.
+$3;                        :
+$1:                        :
+$1.                        X.
+$1 k                        Wd.
+$5 'X                          k
+$5  'X                        K.
+$5    k                      d
+$4     ;K       WXXW       k.
+$4       "cooc*"    "*coo'"

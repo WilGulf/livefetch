@@ -1,0 +1,21 @@
+MAIN_COLOR=RED
+                             $1....
+              $1.',:clooo:  $1.:looooo:.
+           $1.;looooooooc  $1.oooooooooo'
+        $1.;looooool:,''.  $1:ooooooooooc
+       $1;looool;.         $1'oooooooooo,
+      $1;clool'             $1.cooooooc.  $1,,
+         $1...                $1......  $1.:oo,
+  $1.;clol:,.                        $1.loooo'
+ $1:ooooooooo,                        $1'ooool
+$1'ooooooooooo.                        $1loooo.
+$1'ooooooooool                         $1coooo.
+ $1,loooooooc.                        $1.loooo.
+   $1.,;;;'.                          $1;ooooc
+       $1...                         $1,ooool.
+    $1.cooooc.              $1..',,'.  $1.cooo.
+      $1;ooooo:.           $1;oooooooc.  $1:l.
+       $1.coooooc,..      $1coooooooooo.
+         $1.:ooooooolc:. $1.ooooooooooo'
+           $1.':loooooo;  $1,oooooooooc
+               $1..';::c'  $1.;loooo:'
