@@ -1,7 +1,7 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
-#include "ncurses.h"
+#include <stdbool.h>
 
 int parse_config(const char *path);
 const char *get_logo(char *arg_logo);

@@ -2,6 +2,8 @@
 
 #include "stdio.h"
 #include "string.h"
+#include "config.h"
+#include "paths.h"
 
 char keys[16][64];
 int keys_int = 0;
@@ -22,7 +24,9 @@ const char *get_logo(char *arg_logo) {
     }
 
     if (strcmp(logo, "default") == 0) {
-        return "src/logos/macos.txt";
+        static char buffer[256];
+        snprintf(buffer, sizeof(buffer), "%s/macos.txt", LOGO_PATH);
+        return buffer;
     if (strcmp(logo, "none") == 0) {
         return NULL;
     }
@@ -35,12 +39,14 @@ const char *get_logo(char *arg_logo) {
             j++;
         }
 
-        static char buffer[64];
-        snprintf(buffer, 64, "src/logos/%s.txt", logo);
+        static char buffer[256];
+        snprintf(buffer, sizeof(buffer), "%s/%s.txt", LOGO_PATH, logo);
         return (const char *)buffer;
     }
 
-    return "src/logos/macos.txt";
+    static char buffer[256];
+    snprintf(buffer, sizeof(buffer), "%s/macos.txt", LOGO_PATH);
+    return buffer;
 }
 
 bool get_updating_visualizer() {
@@ -180,7 +186,7 @@ int parse_config(const char *path) {
     } else {
         printw("could not open config: %s", path);
         refresh();
-        napms(1000);
+        napms(10000);
 
         return 0;
     }

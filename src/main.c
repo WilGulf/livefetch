@@ -7,6 +7,7 @@
 
 #include "config.h"
 #include "sysinfo.h"
+#include "paths.h"
 
 #define MAJOR_VERSION 0
 #define MINOR_VERSION 1
@@ -67,12 +68,12 @@ int init_modules() {
     return 1;
 }
 
-void two_color_print(char *str, char *fmt, ...) {
+void two_color_print(char *str, char *fmt, int color, ...) {
     va_list list;
     va_start(list, fmt);
 
     printw(str);
-    attron(COLOR_PAIR(WHITE));
+    attron(COLOR_PAIR(color));
     char buffer[256];
     vsnprintf(buffer, sizeof(buffer) - 1, fmt, list);
     printw(buffer);
@@ -85,78 +86,96 @@ void module(int num, bool is_updating, int color) {
         switch (modules_array[num]) {
             attron(COLOR_PAIR(color));
             case 1: {
+                attron(COLOR_PAIR((color == BLACK) ? BLACK : WHITE));
                 printw("%s", system_info.hostname);
                 break;
             }
             case 2: {
-                printw("OS: %s", system_info.os);
+                two_color_print("OS: ", "%s", (color == BLACK) ? BLACK : WHITE, system_info.os);
+                //printw("OS: %s", system_info.os);
                 break;
             }
             case 3: {
-                printw("Kernel: %s", system_info.kernel);
+                two_color_print("Kernel: ", "%s", (color == BLACK) ? BLACK : WHITE, system_info.kernel);
+                //printw("Kernel: %s", system_info.kernel);
                 break;
             }
             case 4: {
                 get_uptime(&system_info);
-                printw("Uptime:%s", system_info.uptime);
+                two_color_print("Uptime:", "%s", (color == BLACK) ? BLACK : WHITE, system_info.uptime);
+                //printw("Uptime:%s", system_info.uptime);
                 break;
             }
             case 5: {
                 system_info.package = 6767;
-                printw("Packages Installed: %d", system_info.package);
+                two_color_print("Packages Installed: ", "%d", (color == BLACK) ? BLACK : WHITE, system_info.package);
+                //printw("Packages Installed: %d", system_info.package);
                 break;
             }
             case 6: {
-                printw("Shell: %s", system_info.shell);
+                two_color_print("Shell: ", "%s", (color == BLACK) ? BLACK : WHITE, system_info.shell);
+                //printw("Shell: %s", system_info.shell);
                 break;
             }
             case 7: {
-                printw("Display: %s", system_info.display);
+                two_color_print("Display: ", "%s", (color == BLACK) ? BLACK : WHITE, system_info.display);
+                //printw("Display: %s", system_info.display);
                 break;
             }
             case 8: {
-                printw("Terminal: %s", system_info.terminal);
+                two_color_print("Terminal: ", "%s", (color == BLACK) ? BLACK : WHITE, system_info.terminal);
+                //printw("Terminal: %s", system_info.terminal);
                 break;
             }
             case 9: {
-                printw("CPU: %s", system_info.cpu);
+                two_color_print("CPU: ", "%s", (color == BLACK) ? BLACK : WHITE, system_info.cpu);
+                //printw("CPU: %s", system_info.cpu);
                 break;
             }
             case 10: {
-                printw("GPU: %s", system_info.gpu);
+                two_color_print("CPU: ", "%s", (color == BLACK) ? BLACK : WHITE, system_info.cpu);
+                //printw("GPU: %s", system_info.gpu);
                 break;
             }
             case 11: {
                 get_mem(&system_info);
-                printw("Memory: %s", system_info.memory);
+                two_color_print("Memory: ", "%s", (color == BLACK) ? BLACK : WHITE, system_info.memory);
+                //printw("Memory: %s", system_info.memory);
                 break;
             }
             case 12: {
                 get_swap(&system_info);
-                printw("Swap: %s", system_info.swap);
+                two_color_print("Swap: ", "%s", (color == BLACK) ? BLACK : WHITE, system_info.swap);
+                //printw("Swap: %s", system_info.swap);
                 break;
             }
             case 13: {
                 get_disk(&system_info, "/");
-                printw("Disk %s: %s", system_info.disk, system_info.disk_info);
+                char buffer[32] = "";
+                snprintf(buffer, sizeof(buffer), "Disk %s: ", system_info.disk);
+                two_color_print(buffer, "%s", (color == BLACK) ? BLACK : WHITE, system_info.disk_info);
+                //printw("Disk %s: %s", system_info.disk, system_info.disk_info);
                 break;
             }
             case 14: {
                 get_local_ip(&system_info);
-                printw("Local IP: %s", system_info.local_ip);
+                two_color_print("Local IP: ", "%s", (color == BLACK) ? BLACK : WHITE, system_info.local_ip);
+                //printw("Local IP: %s", system_info.local_ip);
                 break;
             }
             case 15: {
                 system_info.battery = 67;
-                printw("Battery: %d%%", system_info.battery);
+                two_color_print("Battery: ", "%d%%", (color == BLACK) ? BLACK : WHITE, system_info.battery);
+                //printw("Battery: %d%%", system_info.battery);
                 break;
             }
             case 16: {
-                printw("System Locale: %s", system_info.locale);
+                two_color_print("System Locale: ", "%s", (color == BLACK) ? BLACK : WHITE, system_info.locale);
+                //printw("System Locale: %s", system_info.locale);
                 break;
             }
             case 99: {
-                attron(COLOR_PAIR(color));
+                attron((color == BLACK) ? BLACK : WHITE);
                 printw("---------------");
                 break;
             }
@@ -173,51 +192,51 @@ void module(int num, bool is_updating, int color) {
                 printw("%s", system_info.hostname);
                 break;
             case 2:
-                two_color_print("OS: ", "%s", system_info.os);
+                two_color_print("OS: ", "%s", WHITE, system_info.os);
                 break;
             case 3:
-                two_color_print("Kernel: ", "%s", system_info.kernel);
+                two_color_print("Kernel: ", "%s", WHITE, system_info.kernel);
                 break;
             case 4:
-                two_color_print("Uptime:", "%s", system_info.uptime);
+                two_color_print("Uptime:", "%s", WHITE, system_info.uptime);
                 break;
             case 5:
-                two_color_print("Packages Installed: ", "%d", system_info.package);
+                two_color_print("Packages Installed: ", "%d", WHITE, system_info.package);
                 break;
             case 6:
-                two_color_print("Shell: ", "%s", system_info.shell);
+                two_color_print("Shell: ", "%s", WHITE, system_info.shell);
                 break;
             case 7:
-                two_color_print("Display: ", "%s", system_info.display);
+                two_color_print("Display: ", "%s", WHITE, system_info.display);
                 break;
             case 8:
-                two_color_print("Terminal: ", "%s", system_info.terminal);
+                two_color_print("Terminal: ", "%s", WHITE, system_info.terminal);
                 break;
             case 9:
-                two_color_print("CPU: ", "%s", system_info.cpu);
+                two_color_print("CPU: ", "%s", WHITE, system_info.cpu);
                 break;
             case 10:
-                two_color_print("GPU: ", "%s",  system_info.gpu);break;
+                two_color_print("GPU: ", "%s", WHITE,  system_info.gpu);break;
             case 11:
-                two_color_print("Memory: ", "%s", system_info.memory);
+                two_color_print("Memory: ", "%s", WHITE, system_info.memory);
                 break;
             case 12:
-                two_color_print("Swap: ", "%s", system_info.swap);
+                two_color_print("Swap: ", "%s", WHITE, system_info.swap);
                 break;
             case 13: {
                 char buffer[32] = "";
                 snprintf(buffer, sizeof(buffer), "Disk %s: ", system_info.disk);
-                two_color_print(buffer, "%s", system_info.disk_info);
+                two_color_print(buffer, "%s", WHITE, system_info.disk_info);
                 break;
             }
             case 14:
-                two_color_print("Local IP: ", "%s", system_info.local_ip);
+                two_color_print("Local IP: ", "%s", WHITE, system_info.local_ip);
                 break;
             case 15:
-                two_color_print("Battery: ", "%d%%", system_info.battery);
+                two_color_print("Battery: ", "%d%%", WHITE, system_info.battery);
                 break;
             case 16:
-                two_color_print("System Locale: ", "%s", system_info.locale);
+                two_color_print("System Locale: ", "%s", WHITE, system_info.locale);
                 break;
             case 99:
                 attron(COLOR_PAIR(color));
@@ -278,7 +297,7 @@ int main(int argc, char *argv[]) {
         }
     }
     if (!config_arg) {
-        parse_config("default.conf");
+        parse_config(CONFIG_PATH);
     }
 
     bool updating_visualizer = get_updating_visualizer();
@@ -418,6 +437,7 @@ int main(int argc, char *argv[]) {
                 printw(" ");
             }
 
+            attron(COLOR_PAIR((i == line_to_update && updating_visualizer) ? BLACK : main_color));
             module(i, (i == line_to_update), (i == line_to_update && updating_visualizer) ? BLACK : main_color);
             printw("\n");
 
