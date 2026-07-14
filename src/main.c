@@ -268,10 +268,10 @@ int main(int argc, char *argv[]) {
             printf("Set the logo source. Use 'none' to disable logo output\n");
             printf("\033[1m   -c, --config   \033[0m");
             printf("Specify the config file to load\n");
-            return 1;
+            return 0;
         } else if ((strcmp(argv[args_i], "-v") == 0) || (strcmp(argv[args_i], "--version") == 0)) {
             printf("Livefetch %d.%d.%d (%s)\n", MAJOR_VERSION, MINOR_VERSION, VERSION_PATCH, ARCH);
-            return 1;
+            return 0;
         }
     }
 
@@ -292,8 +292,10 @@ int main(int argc, char *argv[]) {
     bool config_arg = false;
     for (int args_i = 0; args_i < argc; args_i++) {
         if ((strcmp(argv[args_i], "-c") == 0) || (strcmp(argv[args_i], "--config") == 0)) {
-            parse_config(argv[args_i + 1]);
-            config_arg = true;
+            if (args_i + 1 < argc) {
+                parse_config(argv[args_i + 1]);
+                config_arg = true;
+            }
         }
     }
     if (!config_arg) {
@@ -307,8 +309,10 @@ int main(int argc, char *argv[]) {
     bool logo_arg = false;
     for (int args_i = 0; args_i < argc; args_i++) {
         if ((strcmp(argv[args_i], "-l") == 0) || (strcmp(argv[args_i], "--logo") == 0)) {
-            file = fopen(get_logo(argv[args_i + 1]), "r");
-            logo_arg = true;
+            if (args_i + 1 < argc) {
+                file = fopen(get_logo(argv[args_i + 1]), "r");
+                logo_arg = true;
+            }
         }
     }
     if (!logo_arg) {

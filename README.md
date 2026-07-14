@@ -1,2 +1,2 @@
 # livefetch
-A TUI program like fastfetch that activly updates the shown system information.
+A TUI program like fastfetch that actively updates the shown system information.
