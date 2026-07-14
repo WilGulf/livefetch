@@ -9,8 +9,8 @@ char values[16][64];
 
 static int modules_array[32];
 
-const char* get_logo(char *arg_logo) {
-    char logo[64];
+const char *get_logo(char *arg_logo) {
+    static char logo[64];
     if (arg_logo != NULL) {
         strcpy(logo, arg_logo);
     } else {
@@ -22,7 +22,7 @@ const char* get_logo(char *arg_logo) {
     }
 
     if (strcmp(logo, "default") == 0) {
-        return "src/logos/macos2.txt";
+        return "src/logos/macos.txt";
     if (strcmp(logo, "none") == 0) {
         return NULL;
     }
@@ -40,7 +40,7 @@ const char* get_logo(char *arg_logo) {
         return (const char *)buffer;
     }
 
-    return "src/logos/macos2.txt";
+    return "src/logos/macos.txt";
 }
 
 bool get_updating_visualizer() {
@@ -104,8 +104,6 @@ int get_module(int num) {
 }
 
 int parse_config(const char *path) {
-    bool is_table = false;
-
     FILE* file = fopen(path, "r");
 
     char line[256];

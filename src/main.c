@@ -52,23 +52,17 @@ int init_modules() {
 
     get_uptime(&system_info);
 
-    strcpy(system_info.shell, "bash");
+    /*strcpy(system_info.shell, "bash");
     strcpy(system_info.display, "4K @ 240hz");
-    strcpy(system_info.terminal, "kitty");
-    strcpy(system_info.gpu, "rtx5090 32gb");
+    strcpy(system_info.terminal, "kitty");*/
+    get_mem(&system_info);
+    get_swap(&system_info);
+    get_disk(&system_info, "/");
 
-    system_info.memory_max = 6767;
-    system_info.memory_use = 4141;
-    system_info.swap_max = 6767;
-    system_info.swap_use = 4141;
-    system_info.disk_max = 6767;
-    system_info.disk_use = 4141;
-
-    strcpy(system_info.local_ip, "192.168.1.67");
+    get_local_ip(&system_info);
+    get_locale(&system_info);
 
     system_info.battery = 67;
-
-    strcpy(system_info.locale, "swedish");
 
     return 1;
 }
@@ -86,7 +80,7 @@ void two_color_print(char *str, char *fmt, ...) {
     va_end(list);
 }
 
-const char* module(int num, bool is_updating, int color) {
+void module(int num, bool is_updating, int color) {
     if (is_updating) {
         switch (modules_array[num]) {
             attron(COLOR_PAIR(color));
@@ -133,25 +127,22 @@ const char* module(int num, bool is_updating, int color) {
                 break;
             }
             case 11: {
-                system_info.memory_max = 6767;
-                system_info.memory_use = 4141;
-                printw("Memory: %d/%d", system_info.memory_use, system_info.memory_max);
+                get_mem(&system_info);
+                printw("Memory: %s", system_info.memory);
                 break;
             }
             case 12: {
-                system_info.swap_max = 6767;
-                system_info.swap_use = 4141;
-                printw("Swap: %d/%d", system_info.swap_use, system_info.swap_max);
+                get_swap(&system_info);
+                printw("Swap: %s", system_info.swap);
                 break;
             }
             case 13: {
-                system_info.disk_max = 6767;
-                system_info.disk_use = 4141;
-                printw("Disk (/): %d/%d", system_info.disk_use, system_info.disk_max);
+                get_disk(&system_info, "/");
+                printw("Disk %s: %s", system_info.disk, system_info.disk_info);
                 break;
             }
             case 14: {
-                strcpy(system_info.local_ip, "192.168.1.67");
+                get_local_ip(&system_info);
                 printw("Local IP: %s", system_info.local_ip);
                 break;
             }
@@ -161,7 +152,6 @@ const char* module(int num, bool is_updating, int color) {
                 break;
             }
             case 16: {
-                strcpy(system_info.locale, "swedish");
                 printw("System Locale: %s", system_info.locale);
                 break;
             }
@@ -209,14 +199,17 @@ const char* module(int num, bool is_updating, int color) {
             case 10:
                 two_color_print("GPU: ", "%s",  system_info.gpu);break;
             case 11:
-                two_color_print("Memory: ", "%d/%d", system_info.memory_use, system_info.memory_max);
+                two_color_print("Memory: ", "%s", system_info.memory);
                 break;
             case 12:
-                two_color_print("Swap: ", "%d/%d", system_info.swap_use, system_info.swap_max);
+                two_color_print("Swap: ", "%s", system_info.swap);
                 break;
-            case 13:
-                two_color_print("Disk (/): ", "%d/%d", system_info.disk_use, system_info.disk_max);
+            case 13: {
+                char buffer[32] = "";
+                snprintf(buffer, sizeof(buffer), "Disk %s: ", system_info.disk);
+                two_color_print(buffer, "%s", system_info.disk_info);
                 break;
+            }
             case 14:
                 two_color_print("Local IP: ", "%s", system_info.local_ip);
                 break;
@@ -325,7 +318,7 @@ int main(int argc, char *argv[]) {
             bool is_color_line = false;
             int i = 0;
             char identifier[] = "MAIN_COLOR=";
-            for (; i < (strlen(identifier)); i++) {
+            for (; (uint64_t)i < (strlen(identifier)); i++) {
                 if (line[i] == identifier[i]) {
                     is_color_line = true;
                 } else {
@@ -373,7 +366,7 @@ int main(int argc, char *argv[]) {
                 }
                 strcpy(logo[lines], line);
 
-                if (strlen(line) - (2 * color_counter) > prev_longest) {
+                if (strlen(line) - (2 * color_counter) > (uint32_t)prev_longest) {
                     longest_line = strlen(line) - (2 * color_counter);            
                 }
 

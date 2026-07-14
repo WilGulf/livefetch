@@ -12,12 +12,10 @@ struct sysinfo {
     char terminal[256];
     char cpu[256];
     char gpu[256];
-    int memory_max;
-    int memory_use;
-    int swap_max;
-    int swap_use;
-    int disk_max;
-    int disk_use;
+    char memory[256];
+    char swap[256];
+    char disk_info[256];
+    char disk[16];
     char local_ip[256];
     int battery;
     char locale[256];
@@ -31,5 +29,12 @@ void get_uptime(struct sysinfo *info);
 
 void get_cpu(struct sysinfo *info);
 void get_gpu(struct sysinfo *info);
+
+void get_mem(struct sysinfo *info);
+void get_swap(struct sysinfo *info);
+void get_disk(struct sysinfo *info, char *path);
+
+void get_local_ip(struct sysinfo *info);
+void get_locale(struct sysinfo *info);
 
 #endif

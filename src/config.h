@@ -4,7 +4,7 @@
 #include "ncurses.h"
 
 int parse_config(const char *path);
-const char* get_logo();
+const char *get_logo(char *arg_logo);
 bool get_updating_visualizer();
 int get_module(int num);
 
