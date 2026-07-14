@@ -380,14 +380,13 @@ int main(int argc, char *argv[]) {
     while (1) {
         erase();
 
-        int i = 0;
-        for (; i < ((lines > modules) ? lines : modules);) {       
+        for (int i = 0; i < ((lines > modules) ? lines : modules);) {      
+            for (int times = 0; times < 3; times++) {
+                printw(" ");
+            }
+
             int chars_displayed = 0;
             if (i < lines) {
-                for (int times = 0; times < 3; times++) {
-                    printw(" ");
-                }
-
                 int j = 0;
                 while (logo[i][j]) {
                     if (logo[i][j] != '\n') {
@@ -404,10 +403,14 @@ int main(int argc, char *argv[]) {
                             printw("%c", logo[i][j]);
                             chars_displayed++;
                         }
-                    } else {
-                        chars_displayed--;
                     }
                     j++;
+                }
+            } else {
+                if (!(i == line_to_update && updating_visualizer)) {
+                    attron(COLOR_PAIR(main_color));
+                } else {
+                    attron(COLOR_PAIR(BLACK));
                 }
             }
 
