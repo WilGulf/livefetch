@@ -113,13 +113,12 @@ void get_cpu(struct sysinfo *info) {
 }
 
 void get_gpu(struct sysinfo *info) {
-    char gpu[32] = "rtx5090";
 #ifdef __linux__
 
 #elif defined(__APPLE__)
-    
+
 #endif
-    snprintf(info->gpu, sizeof(info->gpu), "%s", gpu);
+    snprintf(info->gpu, sizeof(info->gpu), "");
 }
 
 void bytes_to_barinfo(int64_t used_bytes, int64_t total_bytes, char *buffer, int size) {
