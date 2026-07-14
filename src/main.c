@@ -70,7 +70,7 @@ int init_modules() {
 
 void two_color_print(char *str, char *fmt, int color, ...) {
     va_list list;
-    va_start(list, fmt);
+    va_start(list, color);
 
     printw(str);
     attron(COLOR_PAIR(color));

@@ -1,5 +1,4 @@
 */*.o
 */*/*.o
-default.conf
 livefetch
 ./logos/
