@@ -4,6 +4,7 @@
 #include "ncurses.h"
 
 #ifdef __linux__
+    // I USE ARCH BTW, BTW
     #include "stdlib.h"
     #include "sys/sysctl.h"
 #elif defined(__APPLE__)
@@ -113,12 +114,50 @@ void get_cpu(struct sysinfo *info) {
 }
 
 void get_gpu(struct sysinfo *info) {
+    char gpu[64] = "";
+    int cores = 0;
 #ifdef __linux__
-
+    
 #elif defined(__APPLE__)
+    CFMutableDictionaryRef matchDict = IOServiceMatching("IOAccelerator");
+    CFDictionaryAddValue(matchDict, CFSTR("IOMatchCategory"), CFSTR("IOAccelerator"));
 
+    io_iterator_t iterator;
+
+    if (IOServiceGetMatchingServices(kIOMainPortDefault,matchDict, &iterator) == kIOReturnSuccess)
+    {
+        io_registry_entry_t regEntry;
+
+        while ((regEntry = IOIteratorNext(iterator))) {
+            CFMutableDictionaryRef serviceDictionary;
+            if (IORegistryEntryCreateCFProperties(regEntry, &serviceDictionary, kCFAllocatorDefault, kNilOptions) != kIOReturnSuccess)
+            {
+                IOObjectRelease(regEntry);
+                continue;
+            }
+            CFTypeRef GPUModel = (CFTypeRef) CFDictionaryGetValue(serviceDictionary, CFSTR("model"));
+            CFTypeRef GPUCores = (CFTypeRef) CFDictionaryGetValue(serviceDictionary, CFSTR("gpu-core-count"));
+
+            if (GPUModel != nil) {
+                if (CFGetTypeID(GPUModel) == CFStringGetTypeID()) {
+                    CFStringRef cfStr = (CFStringRef) GPUModel;
+                    
+                    CFStringGetCString(cfStr, gpu, sizeof(gpu), kCFStringEncodingUTF8);
+                }
+            }
+
+            if (GPUCores != nil) {
+                if (CFGetTypeID(GPUCores) == CFNumberGetTypeID()) {
+                    CFNumberGetValue((CFNumberRef) GPUCores, kCFNumberSInt32Type, &cores);
+                }
+            }
+            CFRelease(serviceDictionary);
+            IOObjectRelease(regEntry);
+        }
+        IOObjectRelease(iterator);
+    }
 #endif
-    snprintf(info->gpu, sizeof(info->gpu), "");
+    snprintf(info->gpu, sizeof(info->gpu), "%s (%d cores)", gpu, cores);
 }
 
 void bytes_to_barinfo(int64_t used_bytes, int64_t total_bytes, char *buffer, int size) {
@@ -258,4 +297,15 @@ void get_local_ip(struct sysinfo *info) {
         snprintf(info->local_ip, sizeof(info->local_ip), "Unknown");
     }
 #endif
+}
+
+void get_display(struct sysinfo *info) {
+    char display[64];
+    char resolution[32];
+#ifdef __linux__
+
+#elif defined(__APPLE__)
+    
+#endif
+    snprintf(info->display, sizeof(info->display), "%s (%s)", display, resolution);
 }

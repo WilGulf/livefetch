@@ -23,7 +23,6 @@ all: $(TARGET)
 
 $(TARGET): $(OBJ)
 	$(CC) $(CFLAGS) $(LDLIBS) $(LDFLAGS) $(OBJ) -o $@
-	#cp -r src/logos ./
 	cp src/default.conf ./
 %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@

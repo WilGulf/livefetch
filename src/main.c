@@ -50,6 +50,7 @@ int init_modules() {
 
     get_cpu(&system_info);
     get_gpu(&system_info);
+    get_display(&system_info);
 
     get_uptime(&system_info);
 
@@ -92,61 +93,51 @@ void module(int num, bool is_updating, int color) {
             }
             case 2: {
                 two_color_print("OS: ", "%s", (color == BLACK) ? BLACK : WHITE, system_info.os);
-                //printw("OS: %s", system_info.os);
                 break;
             }
             case 3: {
                 two_color_print("Kernel: ", "%s", (color == BLACK) ? BLACK : WHITE, system_info.kernel);
-                //printw("Kernel: %s", system_info.kernel);
                 break;
             }
             case 4: {
                 get_uptime(&system_info);
                 two_color_print("Uptime:", "%s", (color == BLACK) ? BLACK : WHITE, system_info.uptime);
-                //printw("Uptime:%s", system_info.uptime);
                 break;
             }
             case 5: {
                 system_info.package = 6767;
                 two_color_print("Packages Installed: ", "%d", (color == BLACK) ? BLACK : WHITE, system_info.package);
-                //printw("Packages Installed: %d", system_info.package);
                 break;
             }
             case 6: {
                 two_color_print("Shell: ", "%s", (color == BLACK) ? BLACK : WHITE, system_info.shell);
-                //printw("Shell: %s", system_info.shell);
                 break;
             }
             case 7: {
+                get_display(&system_info);
                 two_color_print("Display: ", "%s", (color == BLACK) ? BLACK : WHITE, system_info.display);
-                //printw("Display: %s", system_info.display);
                 break;
             }
             case 8: {
                 two_color_print("Terminal: ", "%s", (color == BLACK) ? BLACK : WHITE, system_info.terminal);
-                //printw("Terminal: %s", system_info.terminal);
                 break;
             }
             case 9: {
                 two_color_print("CPU: ", "%s", (color == BLACK) ? BLACK : WHITE, system_info.cpu);
-                //printw("CPU: %s", system_info.cpu);
                 break;
             }
             case 10: {
-                two_color_print("CPU: ", "%s", (color == BLACK) ? BLACK : WHITE, system_info.cpu);
-                //printw("GPU: %s", system_info.gpu);
+                two_color_print("CPU: ", "%s", (color == BLACK) ? BLACK : WHITE, system_info.gpu);
                 break;
             }
             case 11: {
                 get_mem(&system_info);
                 two_color_print("Memory: ", "%s", (color == BLACK) ? BLACK : WHITE, system_info.memory);
-                //printw("Memory: %s", system_info.memory);
                 break;
             }
             case 12: {
                 get_swap(&system_info);
                 two_color_print("Swap: ", "%s", (color == BLACK) ? BLACK : WHITE, system_info.swap);
-                //printw("Swap: %s", system_info.swap);
                 break;
             }
             case 13: {
@@ -154,24 +145,20 @@ void module(int num, bool is_updating, int color) {
                 char buffer[32] = "";
                 snprintf(buffer, sizeof(buffer), "Disk %s: ", system_info.disk);
                 two_color_print(buffer, "%s", (color == BLACK) ? BLACK : WHITE, system_info.disk_info);
-                //printw("Disk %s: %s", system_info.disk, system_info.disk_info);
                 break;
             }
             case 14: {
                 get_local_ip(&system_info);
                 two_color_print("Local IP: ", "%s", (color == BLACK) ? BLACK : WHITE, system_info.local_ip);
-                //printw("Local IP: %s", system_info.local_ip);
                 break;
             }
             case 15: {
                 system_info.battery = 67;
                 two_color_print("Battery: ", "%d%%", (color == BLACK) ? BLACK : WHITE, system_info.battery);
-                //printw("Battery: %d%%", system_info.battery);
                 break;
             }
             case 16: {
                 two_color_print("System Locale: ", "%s", (color == BLACK) ? BLACK : WHITE, system_info.locale);
-                //printw("System Locale: %s", system_info.locale);
                 break;
             }
             case 99: {
@@ -384,7 +371,6 @@ int main(int argc, char *argv[]) {
                     if (line[j] == '$') {
                         color_counter++;
                     }
-                    //logo[lines][j] = line[j];
                     j++;
                 }
                 strcpy(logo[lines], line);
@@ -399,6 +385,7 @@ int main(int argc, char *argv[]) {
         }
     }
 
+    // MAIN LOOP //
     int line_to_update = 0;
     while (1) {
         erase();
@@ -459,8 +446,6 @@ int main(int argc, char *argv[]) {
 
         napms(100);
     }
-    
-    for(;;);
 
     endwin();
 }

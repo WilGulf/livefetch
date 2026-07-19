@@ -30,6 +30,8 @@ void get_uptime(struct sysinfo *info);
 void get_cpu(struct sysinfo *info);
 void get_gpu(struct sysinfo *info);
 
+void get_display(struct sysinfo *info);
+
 void get_mem(struct sysinfo *info);
 void get_swap(struct sysinfo *info);
 void get_disk(struct sysinfo *info, char *path);
