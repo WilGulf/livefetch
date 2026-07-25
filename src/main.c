@@ -11,7 +11,7 @@
 
 #define MAJOR_VERSION 1
 #define MINOR_VERSION 0
-#define VERSION_PATCH 1
+#define VERSION_PATCH 2
 
 #define RED 1
 #define GREEN 2
