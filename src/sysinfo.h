@@ -10,7 +10,7 @@ struct sysinfo {
     char package[256];
     char shell[256];
     char display[256];
-    char terminal[256];
+    //char terminal[256];
     char cpu[256];
     char gpu[256];
     char memory[256];

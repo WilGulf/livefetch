@@ -59,7 +59,7 @@ void get_hostname(struct sysinfo *info) {
     char user[32] = "";
     get_command_out("uname -n", host);
     get_command_out("whoami", user);
-    snprintf(info->hostname, sizeof(info->hostname), "%s@%s", user, host);
+    snprintf(info->hostname, sizeof(info->hostname), "%s@%s", user, "macbook");
 }
 
 void get_os(struct sysinfo *info) {
@@ -202,7 +202,7 @@ void bytes_to_barinfo(int64_t used_bytes, int64_t total_bytes, char *buffer, int
         j++;
     }
 
-    snprintf(buffer, size, "(%s%s) %s/%s", bar_used, bar_avail, mem_used, mem_size);
+    snprintf(buffer, size, "(%s%s)   %s/%s", bar_used, bar_avail, mem_used, mem_size);
 }
 
 void get_mem(struct sysinfo *info) {
@@ -344,7 +344,7 @@ void get_display(struct sysinfo *info) {
 }
 
 void get_shell(struct sysinfo *info) {
-    get_command_out("echo $0", info->shell);
+    get_command_out("echo $SHELL", info->shell);
 }
 
 

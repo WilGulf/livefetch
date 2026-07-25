@@ -9,8 +9,8 @@
 #include "sysinfo.h"
 #include "paths.h"
 
-#define MAJOR_VERSION 0
-#define MINOR_VERSION 3
+#define MAJOR_VERSION 1
+#define MINOR_VERSION 0
 #define VERSION_PATCH 0
 
 #define RED 1
@@ -115,7 +115,7 @@ void module(int num, bool is_updating, int color) {
                 break;
             }
             case 6: {
-                two_color_print("Shell: ", "%s", (color == BLACK) ? BLACK : WHITE, system_info.shell);
+                two_color_print("System Shell: ", "%s", (color == BLACK) ? BLACK : WHITE, system_info.shell);
                 break;
             }
             case 7: {
@@ -124,7 +124,7 @@ void module(int num, bool is_updating, int color) {
                 break;
             }
             case 8: {
-                two_color_print("Terminal: ", "%s", (color == BLACK) ? BLACK : WHITE, system_info.terminal);
+                //two_color_print("Terminal: ", "%s", (color == BLACK) ? BLACK : WHITE, system_info.terminal);
                 break;
             }
             case 9: {
@@ -199,13 +199,13 @@ void module(int num, bool is_updating, int color) {
                 break;
             }
             case 6:
-                two_color_print("Shell: ", "%s", WHITE, system_info.shell);
+                two_color_print("System Shell: ", "%s", WHITE, system_info.shell);
                 break;
             case 7:
                 two_color_print("Display: ", "%s", WHITE, system_info.display);
                 break;
             case 8:
-                two_color_print("Terminal: ", "%s", WHITE, system_info.terminal);
+                //two_color_print("Terminal: ", "%s", WHITE, system_info.terminal);
                 break;
             case 9:
                 two_color_print("CPU: ", "%s", WHITE, system_info.cpu);
