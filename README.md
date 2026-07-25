@@ -1,7 +1,7 @@
 <div align="center">
   <h1>livefetch</h1>
 
-  <p>A TUI system information tool with live-updating modules.<br>
+  <p>A TUI system information tool with live-updating modules for macos.<br>
 </div>
 
 ![livefetch screenshot](Assets/Screenshot.png)
@@ -49,6 +49,12 @@ sudo make install
 ```
 > **Note:** If `PREFIX` is not specified, `make install` installs to `/usr/local` by default.<br>
 > **Note:** If using a prefix, that prefix needs to be used on both the 'make' and 'make install' commands.
+
+## Run the program
+To run livefetch simply type livefetch in your terminal and then enter.
+```sh
+livefetch
+```
 
 ## How it works
 Livefetch is written in C and using ncurses for rendering in terminal.
