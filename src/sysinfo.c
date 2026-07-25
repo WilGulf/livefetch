@@ -59,7 +59,7 @@ void get_hostname(struct sysinfo *info) {
     char user[32] = "";
     get_command_out("uname -n", host);
     get_command_out("whoami", user);
-    snprintf(info->hostname, sizeof(info->hostname), "%s@%s", user, "macbook");
+    snprintf(info->hostname, sizeof(info->hostname), "%s@%s", user, host);
 }
 
 void get_os(struct sysinfo *info) {
