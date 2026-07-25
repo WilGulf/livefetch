@@ -10,7 +10,7 @@
 #include "paths.h"
 
 #define MAJOR_VERSION 0
-#define MINOR_VERSION 2
+#define MINOR_VERSION 3
 #define VERSION_PATCH 0
 
 #define RED 1
@@ -61,10 +61,13 @@ int init_modules() {
     get_swap(&system_info);
     get_disk(&system_info, "/");
 
+    get_shell(&system_info);
+    get_packages(&system_info);
+
     get_local_ip(&system_info);
     get_locale(&system_info);
 
-    system_info.battery = 67;
+    get_battery(&system_info);
 
     return 1;
 }
@@ -105,8 +108,10 @@ void module(int num, bool is_updating, int color) {
                 break;
             }
             case 5: {
-                system_info.package = 6767;
-                two_color_print("Packages Installed: ", "%d", (color == BLACK) ? BLACK : WHITE, system_info.package);
+                get_packages(&system_info);
+                char buffer[32] = "";
+                snprintf(buffer, sizeof(buffer), "Packages Installed (%s): ", system_info.package_man);
+                two_color_print(buffer, "%s", (color == BLACK) ? BLACK : WHITE, system_info.package);
                 break;
             }
             case 6: {
@@ -153,7 +158,7 @@ void module(int num, bool is_updating, int color) {
                 break;
             }
             case 15: {
-                system_info.battery = 67;
+                get_battery(&system_info);
                 two_color_print("Battery: ", "%d%%", (color == BLACK) ? BLACK : WHITE, system_info.battery);
                 break;
             }
@@ -187,9 +192,12 @@ void module(int num, bool is_updating, int color) {
             case 4:
                 two_color_print("Uptime:", "%s", WHITE, system_info.uptime);
                 break;
-            case 5:
-                two_color_print("Packages Installed: ", "%d", WHITE, system_info.package);
+            case 5: {
+                char buffer[32] = "";
+                snprintf(buffer, sizeof(buffer), "Packages Installed (%s): ", system_info.package_man);
+                two_color_print(buffer, "%s", WHITE, system_info.package);
                 break;
+            }
             case 6:
                 two_color_print("Shell: ", "%s", WHITE, system_info.shell);
                 break;
@@ -220,7 +228,7 @@ void module(int num, bool is_updating, int color) {
                 two_color_print("Local IP: ", "%s", WHITE, system_info.local_ip);
                 break;
             case 15:
-                two_color_print("Battery: ", "%d%%", WHITE, system_info.battery);
+                two_color_print("Battery: ", "%d", WHITE, system_info.battery);
                 break;
             case 16:
                 two_color_print("System Locale: ", "%s", WHITE, system_info.locale);

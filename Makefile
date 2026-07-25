@@ -11,7 +11,7 @@ CFLAGS += -DDATA_DIR=\"$(DATADIR)\"
 UNAME_S := $(shell uname -s)
 
 ifeq ($(UNAME_S),Darwin)
-    LDFLAGS += -framework CoreFoundation -framework IOKit
+    LDFLAGS += -framework CoreFoundation -framework IOKit -framework CoreGraphics -framework CoreDisplay
 endif
 
 SRC := $(wildcard src/*.c)

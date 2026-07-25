@@ -6,7 +6,8 @@ struct sysinfo {
     char os[256];
     char kernel[256];
     char uptime[256];
-    int package;
+    char package_man[256];
+    char package[256];
     char shell[256];
     char display[256];
     char terminal[256];
@@ -36,7 +37,12 @@ void get_mem(struct sysinfo *info);
 void get_swap(struct sysinfo *info);
 void get_disk(struct sysinfo *info, char *path);
 
+void get_shell(struct sysinfo *info);
+void get_packages(struct sysinfo *info);
+
 void get_local_ip(struct sysinfo *info);
 void get_locale(struct sysinfo *info);
+
+void get_battery(struct sysinfo *info);
 
 #endif

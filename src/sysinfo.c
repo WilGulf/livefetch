@@ -2,9 +2,12 @@
 #include "string.h"
 #include "stdio.h"
 #include "ncurses.h"
+#include "dirent.h"
+#include "sys/stat.h"
+#include "assert.h"
 
 #ifdef __linux__
-    // I USE ARCH BTW, BTW
+    // I USE LINUX BTW, FUCK WINDOWS
     #include "stdlib.h"
     #include "sys/sysctl.h"
 #elif defined(__APPLE__)
@@ -18,6 +21,10 @@
     #include "sys/socket.h"
     #include "arpa/inet.h"
     #include "IOKit/IOKitLib.h"
+    #include "CoreGraphics/CGDirectDisplay.h"
+    #include "CoreVideo/CVDisplayLink.h"
+
+    #define ARRAY_SIZE(x) ({ static_assert(!__builtin_types_compatible_p(__typeof__(x), __typeof__(&*(x))), "Must not be a pointer"); (uint32_t) (sizeof(x) / sizeof(*(x))); })
 #endif
 
 void get_command_out(char *cmd, char *buffer) {
@@ -48,8 +55,8 @@ void get_command_out(char *cmd, char *buffer) {
 }
 
 void get_hostname(struct sysinfo *info) {
-    char host[32];
-    char user[32];
+    char host[128] = "";
+    char user[32] = "";
     get_command_out("uname -n", host);
     get_command_out("whoami", user);
     snprintf(info->hostname, sizeof(info->hostname), "%s@%s", user, host);
@@ -124,19 +131,19 @@ void get_gpu(struct sysinfo *info) {
 
     io_iterator_t iterator;
 
-    if (IOServiceGetMatchingServices(kIOMainPortDefault,matchDict, &iterator) == kIOReturnSuccess)
+    if (IOServiceGetMatchingServices(kIOMainPortDefault, matchDict, &iterator) == kIOReturnSuccess)
     {
-        io_registry_entry_t regEntry;
+        io_registry_entry_t reg_entry;
 
-        while ((regEntry = IOIteratorNext(iterator))) {
-            CFMutableDictionaryRef serviceDictionary;
-            if (IORegistryEntryCreateCFProperties(regEntry, &serviceDictionary, kCFAllocatorDefault, kNilOptions) != kIOReturnSuccess)
+        while ((reg_entry = IOIteratorNext(iterator))) {
+            CFMutableDictionaryRef service_dictionary;
+            if (IORegistryEntryCreateCFProperties(reg_entry, &service_dictionary, kCFAllocatorDefault, kNilOptions) != kIOReturnSuccess)
             {
-                IOObjectRelease(regEntry);
+                IOObjectRelease(reg_entry);
                 continue;
             }
-            CFTypeRef GPUModel = (CFTypeRef) CFDictionaryGetValue(serviceDictionary, CFSTR("model"));
-            CFTypeRef GPUCores = (CFTypeRef) CFDictionaryGetValue(serviceDictionary, CFSTR("gpu-core-count"));
+            CFTypeRef GPUModel = (CFTypeRef) CFDictionaryGetValue(service_dictionary, CFSTR("model"));
+            CFTypeRef GPUCores = (CFTypeRef) CFDictionaryGetValue(service_dictionary, CFSTR("gpu-core-count"));
 
             if (GPUModel != nil) {
                 if (CFGetTypeID(GPUModel) == CFStringGetTypeID()) {
@@ -151,8 +158,8 @@ void get_gpu(struct sysinfo *info) {
                     CFNumberGetValue((CFNumberRef) GPUCores, kCFNumberSInt32Type, &cores);
                 }
             }
-            CFRelease(serviceDictionary);
-            IOObjectRelease(regEntry);
+            CFRelease(service_dictionary);
+            IOObjectRelease(reg_entry);
         }
         IOObjectRelease(iterator);
     }
@@ -300,12 +307,138 @@ void get_local_ip(struct sysinfo *info) {
 }
 
 void get_display(struct sysinfo *info) {
-    char display[64];
-    char resolution[32];
+    char display[64] = "";
+    char resolution[32] = "";
+    int refresh_rate = 0;
 #ifdef __linux__
 
 #elif defined(__APPLE__)
     
+    CGDirectDisplayID screens[128];
+    uint32_t screenCount;
+    boolean_t is_builtin = false;
+    size_t width = 0;
+    size_t height = 0;
+
+    if (CGGetOnlineDisplayList(ARRAY_SIZE(screens), screens, &screenCount) != 0) {
+        return;
+    }
+
+    for (uint32_t i = 0; i < screenCount; i++) {
+        CGDirectDisplayID screen = screens[i];
+        is_builtin = CGDisplayIsBuiltin(screen);
+        CGDisplayModeRef mode = CGDisplayCopyDisplayMode(screen);
+        if (mode) {
+            double mode_refresh_rate = CGDisplayModeGetRefreshRate(mode);
+            width = CGDisplayModeGetPixelWidth(mode);
+            height = CGDisplayModeGetPixelHeight(mode);
+
+            refresh_rate = mode_refresh_rate;
+        }
+    }
+
+    snprintf(display, sizeof(display), "%s", (is_builtin ? "BuiltIn" : "External"));
+    snprintf(resolution, sizeof(resolution), "%zux%zu", width, height);
 #endif
-    snprintf(info->display, sizeof(info->display), "%s (%s)", display, resolution);
+    snprintf(info->display, sizeof(info->display), "%s %s %dhz", display, resolution, refresh_rate);
+}
+
+void get_shell(struct sysinfo *info) {
+    get_command_out("echo $0", info->shell);
+}
+
+
+uint32_t get_dirs_in_dir(DIR *dir) {
+    uint32_t num_elements = 0;
+
+    struct dirent* entry;
+    while ((entry = readdir(dir)) != NULL) {
+        bool ok = false;
+
+        if (entry->d_name[0] != '.') {
+            {
+                struct stat stbuf;
+                if (fstatat(dirfd(dir), entry->d_name, &stbuf, 0) == 0) {
+                    ok = S_ISDIR(stbuf.st_mode);
+                }
+            }
+        }
+
+        if (ok) {
+            ++num_elements;
+        }
+    }
+
+    return num_elements;
+}
+
+void get_packages(struct sysinfo *info) {
+    //uint64_t packages = 0;
+#ifdef __linux__
+
+#endif
+    const char* brew_prefix = getenv("HOMEBREW_PREFIX");
+
+    if (brew_prefix != NULL) {
+        strcpy(info->package_man, "brew");
+
+        uint32_t casks = 0;
+        uint32_t formulae = 0;
+        char path[sizeof(brew_prefix) + 32] = "";
+        snprintf(path, sizeof(path), "%s/Caskroom", brew_prefix);
+        DIR *dir = opendir(path);
+        casks += get_dirs_in_dir(dir);
+        closedir(dir);
+
+        snprintf(path, sizeof(path), "%s/Cellar", brew_prefix);
+        dir = opendir(path);
+        formulae += get_dirs_in_dir(dir);
+        closedir(dir);
+
+        snprintf(info->package, sizeof(info->package), "%d formulae, %d casks", formulae, casks);
+    }
+}
+
+void get_battery(struct sysinfo *info) {
+    CFMutableDictionaryRef matchDict = IOServiceMatching("AppleSmartBattery");
+    CFDictionaryAddValue(matchDict, CFSTR("IOMatchCategory"), CFSTR("AppleSmartBattery"));
+
+    io_iterator_t iterator;
+
+    if (IOServiceGetMatchingServices(kIOMainPortDefault, matchDict, &iterator) == kIOReturnSuccess)
+    {
+        io_registry_entry_t reg_entry;
+
+        while ((reg_entry = IOIteratorNext(iterator))) {
+            CFMutableDictionaryRef service_dictionary;
+            if (IORegistryEntryCreateCFProperties(reg_entry, &service_dictionary, kCFAllocatorDefault, kNilOptions) != kIOReturnSuccess)
+            {
+                IOObjectRelease(reg_entry);
+                continue;
+            }
+
+            int currentCapacity = 0, maxCapacity = 0;
+
+            CFTypeRef max_capacity_cf = (CFTypeRef) CFDictionaryGetValue(service_dictionary, CFSTR("MaxCapacity"));
+            CFTypeRef current_capacity_cf = (CFTypeRef) CFDictionaryGetValue(service_dictionary, CFSTR("CurrentCapacity"));
+
+            if (max_capacity_cf != nil) {
+                if (CFGetTypeID(max_capacity_cf) == CFNumberGetTypeID()) {
+                    CFNumberGetValue((CFNumberRef) max_capacity_cf, kCFNumberSInt32Type, &maxCapacity);
+                }
+            }
+
+            if (current_capacity_cf != nil) {
+                if (CFGetTypeID(current_capacity_cf) == CFNumberGetTypeID()) {
+                    CFNumberGetValue((CFNumberRef) current_capacity_cf, kCFNumberSInt32Type, &currentCapacity);
+                }
+            }
+
+            info->battery = currentCapacity * 100.0 / maxCapacity;
+
+            CFRelease(service_dictionary);
+            IOObjectRelease(reg_entry);
+        }
+        IOObjectRelease(iterator);
+    }
 }
