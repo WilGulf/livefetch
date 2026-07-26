@@ -4,6 +4,8 @@
 #include <string.h>
 #include <unistd.h>
 #include <stdarg.h>
+#include <locale.h>
+#include <stdlib.h>
 
 #include "config.h"
 #include "sysinfo.h"
@@ -271,6 +273,8 @@ int main(int argc, char *argv[]) {
     }
 
     // INIT //
+    setenv("NCURSES_NO_UTF8_ACS", "1", 1);
+    setlocale(LC_ALL, "");
     initscr();
     start_color();
     use_default_colors();
