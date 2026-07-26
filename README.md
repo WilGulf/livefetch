@@ -50,6 +50,9 @@ sudo make install
 > **Note:** If `PREFIX` is not specified, `make install` installs to `/usr/local` by default.<br>
 > **Note:** If using a prefix, that prefix needs to be used on both the 'make' and 'make install' commands.
 
+## Binary releases
+
+
 ## Run the program
 To run livefetch simply type livefetch in your terminal and then enter.
 ```sh

@@ -294,7 +294,7 @@ int main(int argc, char *argv[]) {
         }
     }
     if (!config_arg) {
-        parse_config(CONFIG_PATH);
+        parse_config(get_config_path());
     }
 
     bool updating_visualizer = get_updating_visualizer();

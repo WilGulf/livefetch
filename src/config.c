@@ -26,8 +26,13 @@ const char *get_logo(char *arg_logo) {
 
     if (strcmp(logo, "default") == 0) {
         static char buffer[256];
-        snprintf(buffer, sizeof(buffer), "%s/macos.txt", LOGO_PATH);
+    #ifdef __linux__
+        snprintf(buffer, sizeof(buffer), "%s/linux_unknown.txt", get_logo_path());
+    #elif defined(__APPLE__)
+        snprintf(buffer, sizeof(buffer), "%s/macos.txt", get_logo_path());
+    #endif
         return buffer;
+        
     if (strcmp(logo, "none") == 0) {
         return NULL;
     }
@@ -41,12 +46,16 @@ const char *get_logo(char *arg_logo) {
         }
 
         static char buffer[256];
-        snprintf(buffer, sizeof(buffer), "%s/%s.txt", LOGO_PATH, logo);
+        snprintf(buffer, sizeof(buffer), "%s/%s.txt", get_logo_path(), logo);
         return (const char *)buffer;
     }
 
     static char buffer[256];
-    snprintf(buffer, sizeof(buffer), "%s/macos.txt", LOGO_PATH);
+#ifdef __linux__
+    snprintf(buffer, sizeof(buffer), "%s/macos.txt", get_logo_path());
+#elif defined(__APPLE__)
+    snprintf(buffer, sizeof(buffer), "%s/linux_unknown.txt", get_logo_path());
+#endif
     return buffer;
 }
 
