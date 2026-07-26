@@ -10,7 +10,6 @@
 #ifdef __linux__
     // I USE LINUX BTW, FUCK WINDOWS
     #include <stdlib.h>
-    #include <sys/sysctl.h>
 #elif defined(__APPLE__)
     #include <stdlib.h>
     #include <sys/sysctl.h>
