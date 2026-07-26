@@ -77,9 +77,14 @@ void get_kernel(struct sysinfo *info) {
 }
 
 void get_uptime(struct sysinfo *info) {
+double time = 0;
+#ifdef __linux__
+
+#elif defined(__APPLE__)
     struct timespec ts;
     clock_gettime(CLOCK_MONOTONIC, &ts);
-    double time = ts.tv_sec + ts.tv_nsec / 1e9;
+    time = ts.tv_sec + ts.tv_nsec / 1e9;
+#endif
     
     int seconds = time;
     int minutes = seconds / 60;
@@ -400,6 +405,9 @@ void get_packages(struct sysinfo *info) {
 }
 
 void get_battery(struct sysinfo *info) {
+#ifdef __linux__
+
+#elif defined(__APPLE__)
     CFMutableDictionaryRef matchDict = IOServiceMatching("AppleSmartBattery");
     CFDictionaryAddValue(matchDict, CFSTR("IOMatchCategory"), CFSTR("AppleSmartBattery"));
 
@@ -441,4 +449,5 @@ void get_battery(struct sysinfo *info) {
         }
         IOObjectRelease(iterator);
     }
+#endif
 }
