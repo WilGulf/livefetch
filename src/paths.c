@@ -6,10 +6,10 @@
 #include "sys/stat.h"
 #include "stdbool.h"
 #include "stdio.h"
+#include "limits.h"
 
 #ifdef __APPLE__
 #include "mach-o/dyld.h"
-#include "limits.h"
 #include "libgen.h"
 #endif
 
