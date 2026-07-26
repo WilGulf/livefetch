@@ -215,10 +215,12 @@ void bytes_to_barinfo(int64_t used_bytes, int64_t total_bytes, char *buffer, int
 }
 
 void get_mem(struct sysinfo *info) {
+    int64_t total_bytes = 0;
+    int64_t used_bytes = 0;
 #ifdef __linux__
     
 #elif defined(__APPLE__)
-    int64_t total_bytes;
+    total_bytes;
     size_t size;
     size = sizeof(int64_t);
     sysctlbyname("hw.memsize", &total_bytes, &size, NULL, 0);
@@ -232,7 +234,7 @@ void get_mem(struct sysinfo *info) {
     vm_size_t page_size;
     host_page_size(port, &page_size);
     
-    int64_t used_bytes = (
+    used_bytes = (
         (uint64_t)container.active_count +
         (uint64_t)container.wire_count +
         (uint64_t)container.compressor_page_count
