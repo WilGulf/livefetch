@@ -1,9 +1,9 @@
 #include "ncurses.h"
 #include "panel.h"
 
-#include "string.h"
-#include "unistd.h"
-#include "stdarg.h"
+#include <string.h>
+#include <unistd.h>
+#include <stdarg.h>
 
 #include "config.h"
 #include "sysinfo.h"

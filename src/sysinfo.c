@@ -1,28 +1,29 @@
 #include "sysinfo.h"
-#include "string.h"
-#include "stdio.h"
-#include "ncurses.h"
-#include "dirent.h"
-#include "sys/stat.h"
-#include "assert.h"
+
+#include <string.h>
+#include <stdio.h>
+#include <ncurses.h>
+#include <dirent.h>
+#include <sys/stat.h>
+#include <assert.h>
 
 #ifdef __linux__
     // I USE LINUX BTW, FUCK WINDOWS
-    #include "stdlib.h"
-    #include "sys/sysctl.h"
+    #include <stdlib.h>
+    #include <sys/sysctl.h>
 #elif defined(__APPLE__)
-    #include "stdlib.h"
-    #include "sys/sysctl.h"
-    #include "time.h"
-    #include "mach/mach.h"
-    #include "sys/mount.h"
-    #include "CoreFoundation/CoreFoundation.h"
-    #include "ifaddrs.h"
-    #include "sys/socket.h"
-    #include "arpa/inet.h"
-    #include "IOKit/IOKitLib.h"
-    #include "CoreGraphics/CGDirectDisplay.h"
-    #include "CoreVideo/CVDisplayLink.h"
+    #include <stdlib.h>
+    #include <sys/sysctl.h>
+    #include <time.h>
+    #include <mach/mach.h>
+    #include <sys/mount.h>
+    #include <CoreFoundation/CoreFoundation.h>
+    #include <ifaddrs.h>
+    #include <sys/socket.h>
+    #include <arpa/inet.h>
+    #include <IOKit/IOKitLib.h>
+    #include <CoreGraphics/CGDirectDisplay.h>
+    #include <CoreVideo/CVDisplayLink.h>
 
     #define ARRAY_SIZE(x) ({ static_assert(!__builtin_types_compatible_p(__typeof__(x), __typeof__(&*(x))), "Must not be a pointer"); (uint32_t) (sizeof(x) / sizeof(*(x))); })
 #endif

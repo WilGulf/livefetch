@@ -2,8 +2,9 @@
 
 #include "ncurses.h"
 
-#include "stdio.h"
-#include "string.h"
+#include <stdio.h>
+#include <string.h>
+
 #include "paths.h"
 
 char keys[16][64];

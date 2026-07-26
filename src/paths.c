@@ -1,16 +1,18 @@
+#define _POSIX_C_SOURCE 200809L
+
 #include "paths.h"
 
-#include "string.h"
-#include "unistd.h"
-#include "stdarg.h"
-#include "sys/stat.h"
-#include "stdbool.h"
-#include "stdio.h"
-#include "limits.h"
+#include <string.h>
+#include <unistd.h>
+#include <stdarg.h>
+#include <sys/stat.h>
+#include <stdbool.h>
+#include <stdio.h>
+#include <limits.h>
 
 #ifdef __APPLE__
-#include "mach-o/dyld.h"
-#include "libgen.h"
+#include <mach-o/dyld.h>
+#include <libgen.h>
 #endif
 
 bool path_exists(const char *filename) {
