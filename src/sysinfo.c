@@ -254,13 +254,15 @@ void get_swap(struct sysinfo *info) {
 }
 
 void get_disk(struct sysinfo *info, char *path) {
+    int64_t used_bytes = 0;
+    int64_t total_bytes = 0;
 #ifdef __linux__
 
 #elif defined(__APPLE__)
     struct statfs disk_buffer;
     statfs(path, &disk_buffer);
-    int64_t used_bytes = (disk_buffer.f_blocks - disk_buffer.f_bfree) * disk_buffer.f_bsize;
-    int64_t total_bytes = disk_buffer.f_blocks * disk_buffer.f_bsize;
+    used_bytes = (disk_buffer.f_blocks - disk_buffer.f_bfree) * disk_buffer.f_bsize;
+    total_bytes = disk_buffer.f_blocks * disk_buffer.f_bsize;
 #endif
     char buffer[256] = "";
     bytes_to_barinfo(used_bytes, total_bytes, buffer, sizeof(buffer));
