@@ -78,11 +78,11 @@ void two_color_print(char *str, char *fmt, int color, ...) {
     va_list list;
     va_start(list, color);
 
-    printw(str);
+    printw("%s", str);
     attron(COLOR_PAIR(color));
     char buffer[256];
     vsnprintf(buffer, sizeof(buffer) - 1, fmt, list);
-    printw(buffer);
+    printw("%s", buffer);
 
     va_end(list);
 }
@@ -169,7 +169,7 @@ void module(int num, bool is_updating, int color) {
                 break;
             }
             case 99: {
-                attron((color == BLACK) ? BLACK : WHITE);
+                attron(COLOR_PAIR((color == BLACK) ? BLACK : WHITE));
                 printw("---------------");
                 break;
             }
@@ -273,8 +273,6 @@ int main(int argc, char *argv[]) {
     }
 
     // INIT //
-    setenv("NCURSES_NO_UTF8_ACS", "1", 1);
-    setlocale(LC_ALL, "");
     initscr();
     start_color();
     use_default_colors();
@@ -401,6 +399,7 @@ int main(int argc, char *argv[]) {
     int line_to_update = 0;
     while (1) {
         erase();
+        attrset(A_NORMAL);
 
         for (int i = 0; i < ((lines > modules) ? lines : modules);) {      
             for (int times = 0; times < 3; times++) {
@@ -410,9 +409,18 @@ int main(int argc, char *argv[]) {
             int chars_displayed = 0;
             if (i < lines) {
                 int j = 0;
+
+                char segment[256];
+                int seg_len = 0;
+
                 while (logo[i][j]) {
                     if (logo[i][j] != '\n') {
                         if (logo[i][j] == '$') {
+                            if (seg_len > 0) {
+                                segment[seg_len] = '\0';
+                                printw("%s", segment);
+                                seg_len = 0;
+                            }
                             if (!(i == line_to_update && updating_visualizer)) {
                                 attron(COLOR_PAIR((logo[i][j + 1] - '0')));
                             } else {
@@ -422,12 +430,18 @@ int main(int argc, char *argv[]) {
                             //
                             j++;
                         } else {
-                            printw("%c", logo[i][j]);
+                            segment[seg_len++] = logo[i][j];
                             chars_displayed++;
                         }
                     }
                     j++;
                 }
+
+                if (seg_len > 0) {
+                    segment[seg_len] = '\0';
+                    printw("%s", segment);
+                }
+
             } else {
                 if (!(i == line_to_update && updating_visualizer)) {
                     attron(COLOR_PAIR(main_color));
