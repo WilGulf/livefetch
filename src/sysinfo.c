@@ -1,3 +1,7 @@
+#ifdef __linux__
+#define _POSIX_C_SOURCE 200809L
+#endif 
+
 #include "sysinfo.h"
 
 #include <string.h>
@@ -245,8 +249,8 @@ void get_swap(struct sysinfo *info) {
     struct xsw_usage swap;
     size_t size = sizeof(struct xsw_usage);
     sysctlbyname("vm.swapusage", &swap, &size, NULL, 0);
-#endif
     bytes_to_barinfo(swap.xsu_used, swap.xsu_total, info->swap, sizeof(info->swap));
+#endif
 }
 
 void get_disk(struct sysinfo *info, char *path) {
