@@ -642,6 +642,7 @@ void get_packages(struct sysinfo *info) {
         DIR *dir = opendir("/var/db/xbps");
         if (dir != NULL) {
             packages = get_files_in_dir(dir);
+            closedir(dir);
         }
         strcpy(info->package_man, "xbps");
         snprintf(info->package, sizeof(info->package), "%ld", packages);
