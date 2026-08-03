@@ -207,7 +207,7 @@ void get_cpu(struct sysinfo *info) {
         while (fgets(line, sizeof(line), file)) {
             if (strncmp(line, "model name", 10) == 0) {
                 int i = 10;
-                while (line[i] != '\n') {
+                while (line[i] != '\n' || line[i] != '\0') {
                     if (line[i] == ':') {
                         i++;
                         break;
@@ -215,13 +215,13 @@ void get_cpu(struct sysinfo *info) {
                     i++;
                 }
 
-                if (line - i > 0) {
+                if (line[i] != '\0') {
                     memmove(line - i - 1, line, strlen(line) + 1);
                     strcpy(cpu, line);
                 }  
             } else if (strncmp(line, "cpu cores", 9) == 0) {
                 int i = 10;
-                while (line[i] != '\n') {
+                while (line[i] != '\n' || line[i] != '\0') {
                     if (line[i] == ':') {
                         i++;
                         break;
@@ -229,7 +229,7 @@ void get_cpu(struct sysinfo *info) {
                     i++;
                 }
 
-                if (line - i > 0) {
+                if (line[i] != '\0') {
                     memmove(line - i - 1, line, strlen(line) + 1);
                     strcpy(cores, line);
                 }
