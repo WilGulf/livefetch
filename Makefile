@@ -23,7 +23,11 @@ all: $(TARGET)
 
 $(TARGET): $(OBJ)
 	$(CC) $(CFLAGS) $(OBJ) $(LDLIBS) $(LDFLAGS) -o $@
-	cp src/default.conf ./
+	ifeq ($(UNAME_S),Darwin)
+		cp src/default-linux.conf ./default.conf
+	else
+		cp src/default.conf ./default.conf
+	endif
 %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
