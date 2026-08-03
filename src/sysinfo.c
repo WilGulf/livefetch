@@ -439,6 +439,7 @@ void get_locale(struct sysinfo *info) {
 #ifdef __linux__
     setlocale(LC_ALL, "");
     snprintf(info->locale, sizeof(info->locale), "%s\n", setlocale(LC_ALL, NULL));
+    clean_string(info->locale);
 #elif defined(__APPLE__)
     CFLocaleRef buffer = CFLocaleCopyCurrent();
     CFStringRef value = CFLocaleGetValue(buffer, kCFLocaleIdentifier);
