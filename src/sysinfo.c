@@ -303,8 +303,8 @@ void bytes_to_barinfo(int64_t used_bytes, int64_t total_bytes, char *buffer, int
 
     double temp = ((double)used_bytes / total_bytes);
     int percent = temp * 100;
-    char bar_used[10] = "";
-    char bar_avail[10] = "";
+    char bar_used[11] = "";
+    char bar_avail[11] = "";
     char mem_used[8] = "";
     if (gb_used > 0) {
         snprintf(mem_used, sizeof(mem_used), "%.1fGB", gb_used);
