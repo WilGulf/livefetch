@@ -161,7 +161,13 @@ void module(int num, bool is_updating, int color) {
             }
             case 15: {
                 get_battery(&system_info);
-                two_color_print("Battery: ", "%d%%", (color == BLACK) ? BLACK : WHITE, system_info.battery);
+
+                if (system_info.battery == 111) {
+                    two_color_print("Battery: ", "%s", (color == BLACK) ? BLACK : WHITE, "Running on AC");
+                } else {
+                    two_color_print("Battery: ", "%d", (color == BLACK) ? BLACK : WHITE, system_info.battery);
+                }
+                
                 break;
             }
             case 16: {
@@ -229,9 +235,15 @@ void module(int num, bool is_updating, int color) {
             case 14:
                 two_color_print("Local IP: ", "%s", WHITE, system_info.local_ip);
                 break;
-            case 15:
-                two_color_print("Battery: ", "%d", WHITE, system_info.battery);
+            case 15: {
+                if (system_info.battery == 111) {
+                    two_color_print("Battery: ", "%s", WHITE, "Running on AC");
+                } else {
+                    two_color_print("Battery: ", "%d", WHITE, system_info.battery);
+                }
+                
                 break;
+            }
             case 16:
                 two_color_print("System Locale: ", "%s", WHITE, system_info.locale);
                 break;

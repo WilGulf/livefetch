@@ -542,7 +542,23 @@ void get_packages(struct sysinfo *info) {
 
 void get_battery(struct sysinfo *info) {
 #ifdef __linux__
+    if (!path_exists("/sys/class/power_supply/BAT0")) {
+        info->battery = 111;
+    } else {
+        FILE *file = fopen("/sys/class/power_supply/BAT0/capacity", "r");
+        if (file != NULL) {
+            char line[32];
+            while (fgets(line, sizeof(line), file)) {
+                const char *start_ptr = strpbrk(line, "0123456789");
+                char *end_ptr;
+                unsigned long long int result = strtoull(start_ptr, &end_ptr, 10);
+                
+                info->battery = (int) result;
 
+                fclose(file);
+            }
+        }
+    }
 #elif defined(__APPLE__)
     CFMutableDictionaryRef matchDict = IOServiceMatching("AppleSmartBattery");
     CFDictionaryAddValue(matchDict, CFSTR("IOMatchCategory"), CFSTR("AppleSmartBattery"));
