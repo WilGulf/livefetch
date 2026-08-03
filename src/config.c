@@ -144,7 +144,6 @@ int parse_config(const char *path) {
                 while (line[i]) {
                     if (line[i] == '#') {
                         modules_array[entries] = string_to_module_num(temp);
-                        entries++;
                         done = true;
                         break;
                     } else if (line[i] == '\n') {
