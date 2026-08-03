@@ -20,6 +20,7 @@
 
 #ifdef __linux__
     #include <sys/statvfs.h>
+    #include <locale.h>
 #elif defined(__APPLE__)
     #include <sys/sysctl.h>
     #include <mach/mach.h>
@@ -130,7 +131,7 @@ void get_os(struct sysinfo *info) {
 #elif defined(__APPLE__)
     char buffer[32];
     get_command_out("sw_vers -productVersion", buffer);
-    snprintf(info->os, sizeof(info->os), "macOS %s", buffer);
+    snprintf(setlocaleinfo->os, sizeof(info->os), "macOS %s", buffer);
 #endif
 }
 
@@ -402,7 +403,8 @@ void get_disk(struct sysinfo *info, char *path) {
 
 void get_locale(struct sysinfo *info) {
 #ifdef __linux__
-
+    setlocale(LC_ALL, "");
+    snprintf(info->locale, sizeof(info->locale), "%s\n", setlocale(LC_ALL, NULL));
 #elif defined(__APPLE__)
     CFLocaleRef buffer = CFLocaleCopyCurrent();
     CFStringRef value = CFLocaleGetValue(buffer, kCFLocaleIdentifier);
