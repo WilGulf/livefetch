@@ -15,6 +15,8 @@
 #include <time.h>
 #include <stdlib.h>
 #include <ctype.h>
+#include <ifaddrs.h>
+#include <arpa/inet.h>
 
 #ifdef __linux__
     #include <sys/statvfs.h>
@@ -23,9 +25,7 @@
     #include <mach/mach.h>
     #include <sys/mount.h>
     #include <CoreFoundation/CoreFoundation.h>
-    #include <ifaddrs.h>
     #include <sys/socket.h>
-    #include <arpa/inet.h>
     #include <IOKit/IOKitLib.h>
     #include <CoreGraphics/CGDirectDisplay.h>
     #include <CoreVideo/CVDisplayLink.h>
@@ -418,9 +418,6 @@ void get_locale(struct sysinfo *info) {
 }
 
 void get_local_ip(struct sysinfo *info) {
-#ifdef __linux__
-
-#elif defined(__APPLE__)
     bool ip_found = false;
     struct ifaddrs *interfaces;
     if (getifaddrs(&interfaces) == 0) {
@@ -444,7 +441,6 @@ void get_local_ip(struct sysinfo *info) {
     if (!ip_found) {
         snprintf(info->local_ip, sizeof(info->local_ip), "Unknown");
     }
-#endif
 }
 
 void get_display(struct sysinfo *info) {
