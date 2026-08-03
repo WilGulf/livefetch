@@ -594,7 +594,7 @@ void get_packages(struct sysinfo *info) {
 #ifdef __linux__
     int64_t packages = 0;
     if (path_exists("/var/lib/rpm")) {
-        if (strcmp(info->package_man, "rpm") != 0) {
+        if (info->package == "") {
             packages = get_command_num_lines_out("rpm -qa");
             snprintf(info->package, sizeof(info->package), "%ld", packages);
         }
@@ -639,13 +639,17 @@ void get_packages(struct sysinfo *info) {
         snprintf(info->package, sizeof(info->package), "%ld", packages);
 
     } else if (path_exists("/var/db/xbps")) {
-        DIR *dir = opendir("/var/db/xbps");
+        if (info->package == "") {
+            packages = get_command_num_lines_out("xbps-query -l");
+            snprintf(info->package, sizeof(info->package), "%ld", packages);
+        }
+        /*DIR *dir = opendir("/var/db/xbps");
         if (dir != NULL) {
             packages = get_files_in_dir(dir);
             closedir(dir);
-        }
+        }*/
         strcpy(info->package_man, "xbps");
-        snprintf(info->package, sizeof(info->package), "%ld", packages);
+        //snprintf(info->package, sizeof(info->package), "%ld", packages);
 
     } else {
         strcpy(info->package_man, "Unknown");
