@@ -10,13 +10,12 @@
 #include <dirent.h>
 #include <sys/stat.h>
 #include <assert.h>
+#include <time.h>
+#include <stdlib.h>
 
 #ifdef __linux__
-    #include <stdlib.h>
 #elif defined(__APPLE__)
-    #include <stdlib.h>
     #include <sys/sysctl.h>
-    #include <time.h>
     #include <mach/mach.h>
     #include <sys/mount.h>
     #include <CoreFoundation/CoreFoundation.h>
@@ -67,7 +66,7 @@ void get_hostname(struct sysinfo *info) {
 
 void get_os(struct sysinfo *info) {
 #ifdef __linux__
-        
+    
 #elif defined(__APPLE__)
     char buffer[32];
     get_command_out("sw_vers -productVersion", buffer);
@@ -82,7 +81,10 @@ void get_kernel(struct sysinfo *info) {
 void get_uptime(struct sysinfo *info) {
 double time = 0;
 #ifdef __linux__
-
+    struct timespec ts;
+    if (clock_gettime(CLOCK_BOOTTIME, &ts) == 0) {
+        time = ts.tv_sec + ts.tv_nsec / 1e9;
+    }
 #elif defined(__APPLE__)
     struct timespec ts;
     clock_gettime(CLOCK_MONOTONIC, &ts);
