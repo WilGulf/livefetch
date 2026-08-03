@@ -11,7 +11,10 @@ CFLAGS += -DDATA_DIR=\"$(DATADIR)\"
 UNAME_S := $(shell uname -s)
 
 ifeq ($(UNAME_S),Darwin)
-    LDFLAGS += -framework CoreFoundation -framework IOKit -framework CoreGraphics -framework CoreDisplay
+LDFLAGS += -framework CoreFoundation -framework IOKit -framework CoreGraphics -framework CoreDisplay
+DEFAULT_CONF := src/default.conf
+else
+DEFAULT_CONF := src/default-linux.conf
 endif
 
 SRC := $(wildcard src/*.c)
@@ -23,11 +26,7 @@ all: $(TARGET)
 
 $(TARGET): $(OBJ)
 	$(CC) $(CFLAGS) $(OBJ) $(LDLIBS) $(LDFLAGS) -o $@
-	ifeq ($(UNAME_S),Darwin)
-		cp src/default-linux.conf ./default.conf
-	else
-		cp src/default.conf ./default.conf
-	endif
+	cp $(DEFAULT_CONF) ./default.conf
 %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
