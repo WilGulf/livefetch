@@ -22,7 +22,7 @@ TARGET = livefetch
 all: $(TARGET)
 
 $(TARGET): $(OBJ)
-	$(CC) $(CFLAGS) $(LDLIBS) $(LDFLAGS) $(OBJ) -o $@
+	$(CC) $(CFLAGS) $(OBJ) $(LDLIBS) $(LDFLAGS) -o $@
 	cp src/default.conf ./
 %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@

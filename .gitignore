@@ -5,3 +5,4 @@ livefetch
 new_release.txt
 test_install/
 release/
+*.tar.gz
