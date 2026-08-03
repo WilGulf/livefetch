@@ -36,7 +36,7 @@ install: $(TARGET)
 
 	install -d $(DATADIR)
 	cp -r src/logos $(DATADIR)/
-	cp src/default.conf $(DATADIR)/
+	cp ./default.conf $(DATADIR)/
 
 clean:
 	rm -f src/*.o
