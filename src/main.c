@@ -252,7 +252,7 @@ void module(int num, bool is_updating, int color) {
                 printw("---------------");
                 break;
             default:
-                printw("");
+                //printw("");
                 break;
         }
     }
