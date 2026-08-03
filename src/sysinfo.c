@@ -320,7 +320,7 @@ void bytes_to_barinfo(int64_t used_bytes, int64_t total_bytes, char *buffer, int
     }
 
     int i = 0;
-    for (; i < (percent / 10); i++) {
+    for (; i < (percent / 10) && i <= 10; i++) {
         bar_used[i] = '#';
     }
     bar_used[i] = '\0';
