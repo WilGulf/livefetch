@@ -1,7 +1,7 @@
 <div align="center">
   <h1>livefetch</h1>
 
-  <p>A TUI system information tool with live-updating modules for macos.<br>
+  <p>A TUI system information tool with live-updating modules for macos and linux.<br>
 </div>
 
 ![livefetch screenshot](Assets/Screenshot.png)
