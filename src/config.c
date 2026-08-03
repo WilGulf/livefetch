@@ -199,6 +199,8 @@ int parse_config(const char *path) {
                 done = false;
             }
         }
+
+        fclose(file);
     } else {
         printw("could not open config: %s", path);
         refresh();

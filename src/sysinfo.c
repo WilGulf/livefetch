@@ -17,6 +17,7 @@
 #include <ctype.h>
 
 #ifdef __linux__
+    #include <sys/statvfs.h>
 #elif defined(__APPLE__)
     #include <sys/sysctl.h>
     #include <mach/mach.h>
@@ -178,8 +179,8 @@ double time = 0;
 }
 
 void get_cpu(struct sysinfo *info) {
-    char cpu[32];
-    char cores[4];
+    char cpu[32] = "";
+    char cores[4] = "";
 #ifdef __linux__
 
 #elif defined(__APPLE__)
@@ -265,11 +266,14 @@ void bytes_to_barinfo(int64_t used_bytes, int64_t total_bytes, char *buffer, int
     for (; i < (percent / 10); i++) {
         bar_used[i] = '#';
     }
+    bar_used[i] = '\0';
+
     int j = 0;
     for (; i < 10; i++) {
         bar_avail[j] = '-';
         j++;
     }
+    bar_avail[j] = '\0';
 
     snprintf(buffer, size, "(%s%s)   %s/%s", bar_used, bar_avail, mem_used, mem_size);
 }
@@ -281,7 +285,7 @@ void get_mem(struct sysinfo *info) {
     int64_t available_bytes = 0;
     FILE *file = fopen("/proc/meminfo", "r");
     if (file != NULL) {
-        char line[256];
+        char line[256] = "";
         while (fgets(line, sizeof(line), file)) {
             if (strncmp(line, "MemTotal:", 9) == 0) {
                 const char *start_ptr = strpbrk(line, "0123456789");
@@ -307,8 +311,7 @@ void get_mem(struct sysinfo *info) {
         fclose(file);        
     }
 #elif defined(__APPLE__)
-    //total_bytes;
-    size_t size;
+     size_t size;
     size = sizeof(int64_t);
     sysctlbyname("hw.memsize", &total_bytes, &size, NULL, 0);
 
@@ -339,16 +342,16 @@ void get_swap(struct sysinfo *info) {
 
     FILE *file = fopen("/proc/meminfo", "r");
     if (file != NULL) {
-        char line[256];
+        char line[256] = "";
         while (fgets(line, sizeof(line), file)) {
-            if (strncmp(line, "SwapTotal:", 9) == 0) {
+            if (strncmp(line, "SwapTotal:", 10) == 0) {
                 const char *start_ptr = strpbrk(line, "0123456789");
                 if (start_ptr != NULL) {
                     char *end_ptr;
                     unsigned long long int result = strtoull(start_ptr, &end_ptr, 10);
                     total_bytes = (int64_t) result;
                 }
-            } else if (strncmp(line, "SwapFree:", 8) == 0) {
+            } else if (strncmp(line, "SwapFree:", 9) == 0) {
                 const char *start_ptr = strpbrk(line, "0123456789");
                 if (start_ptr != NULL) {
                     char *end_ptr;
@@ -378,7 +381,13 @@ void get_disk(struct sysinfo *info, char *path) {
     int64_t used_bytes = 0;
     int64_t total_bytes = 0;
 #ifdef __linux__
-
+    struct statvfs fs;
+    if (statvfs(path, &fs) != 0) {
+        memset(&fs, 0, sizeof(fs));
+    }
+    total_bytes = fs.f_blocks * (int64_t) fs.f_frsize;
+    int64_t free_bytes = fs.f_bfree * (int64_t) fs.f_frsize;
+    used_bytes = total_bytes - free_bytes;
 #elif defined(__APPLE__)
     struct statfs disk_buffer;
     statfs(path, &disk_buffer);

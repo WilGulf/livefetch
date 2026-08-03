@@ -392,6 +392,8 @@ int main(int argc, char *argv[]) {
             }
             is_color_line = false;
         }
+
+        fclose(file);
     }
 
     // MAIN LOOP //
