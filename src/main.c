@@ -180,7 +180,7 @@ void module(int num, bool is_updating, int color) {
                 break;
             }
             default: {
-                printw("");
+                //printw("");
                 break;;
             }
         }
