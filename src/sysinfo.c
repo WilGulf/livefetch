@@ -180,10 +180,44 @@ double time = 0;
 }
 
 void get_cpu(struct sysinfo *info) {
-    char cpu[32] = "";
+    char cpu[64] = "";
     char cores[4] = "";
 #ifdef __linux__
+    FILE *file = fopen("/proc/cpuinfo", "r");
+    if (file != NULL) {
+        char line[256] = "";
+        while (fgets(line, sizeof(line), file)) {
+            if (strncmp(line, "model name", 10) == 0) {
+                int i = 10;
+                while (line[i] != '\n') {
+                    if (line[i] == ':') {
+                        i++;
+                        break;
+                    }
+                    i++;
+                }
 
+                memmove(line - i - 1, line, strlen(line) + 1);
+                strcpy(cpu, line);
+            } else if (strncmp(line, "cpu cores", 9) == 0) {
+                int i = 10;
+                while (line[i] != '\n') {
+                    if (line[i] == ':') {
+                        i++;
+                        break;
+                    }
+                    i++;
+                }
+
+                memmove(line - i - 1, line, strlen(line) + 1);
+                strcpy(cores, line);
+            }
+        }
+        fclose(file);
+
+        clean_string(cpu);
+        clean_string(cores);
+    }
 #elif defined(__APPLE__)
     get_command_out("sysctl -n machdep.cpu.brand_string", cpu);
     get_command_out("sysctl -n hw.physicalcpu", cores);
