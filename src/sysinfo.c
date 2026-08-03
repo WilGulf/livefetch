@@ -61,6 +61,24 @@ void get_command_out(char *cmd, char *buffer) {
 
 }
 
+int get_command_num_lines_out(char *cmd) {
+    FILE *fp;
+    char path[1035];
+
+    int lines = 0;
+
+    fp = popen(cmd, "r");
+    if (fp != NULL) {
+        while (fgets(path, sizeof(path), fp) != NULL) {
+            lines++;
+        }
+    }
+
+    pclose(fp);
+
+    return lines;
+}
+
 void get_hostname(struct sysinfo *info) {
     char host[128] = "";
     char user[32] = "";
@@ -522,8 +540,8 @@ void get_shell(struct sysinfo *info) {
 }
 
 
-uint32_t get_dirs_in_dir(DIR *dir) {
-    uint32_t num_elements = 0;
+int32_t get_dirs_in_dir(DIR *dir) {
+    int32_t num_elements = 0;
 
     struct dirent* entry;
     while ((entry = readdir(dir)) != NULL) {
@@ -539,7 +557,29 @@ uint32_t get_dirs_in_dir(DIR *dir) {
         }
 
         if (ok) {
-            ++num_elements;
+            num_elements++;
+        }
+    }
+
+    return num_elements;
+}
+
+int32_t get_files_in_dir(DIR *dir) {
+    int32_t num_elements = 0;
+
+    struct dirent* entry;
+    while ((entry = readdir(dir)) != NULL) {
+        bool ok = false;
+
+        if (entry->d_name[0] != '.') {
+            struct stat stbuf;
+            if (fstatat(dirfd(dir), entry->d_name, &stbuf, 0) == 0) {
+                ok = S_ISREG(stbuf.st_mode);
+            }
+        }
+
+        if (ok) {
+            num_elements++;
         }
     }
 
@@ -547,27 +587,87 @@ uint32_t get_dirs_in_dir(DIR *dir) {
 }
 
 void get_packages(struct sysinfo *info) {
-    //uint64_t packages = 0;
 #ifdef __linux__
+    int64_t packages = 0;
+    if (path_exists("/var/lib/rpm")) {
+        if (strcmp(info->package_man, "rpm") != 0) {
+            packages = get_command_num_lines_out("rpm -qa");
+            snprintf(info->package, sizeof(info->package), "%ld", packages);
+        }
+        strcpy(info->package_man, "rpm");
 
+    } else if (path_exists("/var/lib/dpkg/status")) {
+        FILE *file = fopen("/var/lib/dpkg/status", "r");
+        if (file != NULL) {
+            char line[256];
+            while (fgets(line, sizeof(line), file)) {
+                if (strncmp(line, "Status: install ok installed", 28) == 0) {
+                    packages++;
+                }
+            }
+            fclose(file);
+        }
+        strcpy(info->package_man, "apt");
+        snprintf(info->package, sizeof(info->package), "%ld", packages);
+
+    } else if (path_exists("/var/lib/pacman/local")) {
+        DIR *dir = opendir("/var/lib/pacman/local");
+        if (dir != NULL) {
+            packages = get_dirs_in_dir(dir);
+        }
+        strcpy(info->package_man, "pacman");
+        snprintf(info->package, sizeof(info->package), "%ld", packages);
+
+    } else if (path_exists("/lib/apk/db/installed")) {
+        FILE *file = fopen("/lib/apk/db/installed", "r");
+        if (file != NULL) {
+            char line[256];
+            while (fgets(line, sizeof(line), file)) {
+                if (strncmp(line, "P:", 2) == 0) {
+                    packages++;
+                }
+            }
+
+            fclose(file);
+        }
+
+        strcpy(info->package_man, "apk");
+        snprintf(info->package, sizeof(info->package), "%ld", packages);
+
+    } else if (path_exists("/var/db/xbps")) {
+        DIR *dir = opendir("/var/db/xbps");
+        if (dir != NULL) {
+            packages = get_files_in_dir(dir);
+        }
+        strcpy(info->package_man, "xbps");
+        snprintf(info->package, sizeof(info->package), "%ld", packages);
+
+    } else {
+        strcpy(info->package_man, "Unknown");
+    }
 #endif
     const char* brew_prefix = getenv("HOMEBREW_PREFIX");
 
     if (brew_prefix != NULL) {
         strcpy(info->package_man, "brew");
 
-        uint32_t casks = 0;
-        uint32_t formulae = 0;
+        int32_t casks = 0;
+        int32_t formulae = 0;
         char path[sizeof(brew_prefix) + 32] = "";
         snprintf(path, sizeof(path), "%s/Caskroom", brew_prefix);
         DIR *dir = opendir(path);
-        casks += get_dirs_in_dir(dir);
-        closedir(dir);
+        if (dir != NULL) {
+            casks += get_dirs_in_dir(dir);
+            closedir(dir);
+        }
+        
 
         snprintf(path, sizeof(path), "%s/Cellar", brew_prefix);
         dir = opendir(path);
-        formulae += get_dirs_in_dir(dir);
-        closedir(dir);
+        if (dir != NULL) {
+            formulae += get_dirs_in_dir(dir);
+            closedir(dir);
+        }  
 
         snprintf(info->package, sizeof(info->package), "%d formulae, %d casks", formulae, casks);
     }
