@@ -1,11 +1,11 @@
 #define _POSIX_C_SOURCE 200809L
 
 #include "paths.h"
+#include "util.h"
 
 #include <string.h>
 #include <unistd.h>
 #include <stdarg.h>
-#include <sys/stat.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <limits.h>
@@ -14,11 +14,6 @@
 #include <mach-o/dyld.h>
 #include <libgen.h>
 #endif
-
-bool path_exists(const char *filename) {
-    struct stat buffer;
-    return stat(filename, &buffer) == 0 ? true : false;
-}
 
 static void get_binary_dir(char *buffer, size_t size) {
 #ifdef __linux__

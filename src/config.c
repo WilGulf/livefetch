@@ -6,6 +6,8 @@
 #include <string.h>
 
 #include "paths.h"
+#include "sysinfo.h"
+#include "util.h"
 
 char keys[16][64];
 int keys_int = 0;
@@ -13,7 +15,7 @@ char values[16][64];
 
 static int modules_array[32];
 
-const char *get_logo(char *arg_logo) {
+const char *get_logo(char *arg_logo, struct sysinfo *info) {
     static char logo[64];
     if (arg_logo != NULL) {
         strcpy(logo, arg_logo);
@@ -28,7 +30,10 @@ const char *get_logo(char *arg_logo) {
     if (strcmp(logo, "default") == 0) {
         static char buffer[256];
     #ifdef __linux__
-        snprintf(buffer, sizeof(buffer), "%s/linux_unknown.txt", get_logo_path());
+        snprintf(buffer, sizeof(buffer), "%s/%s.txt", get_logo_path(), info->os_id);
+        if (!path_exists(buffer)) {
+            snprintf(buffer, sizeof(buffer), "%s/linux_unknown.txt", get_logo_path());
+        }
     #elif defined(__APPLE__)
         snprintf(buffer, sizeof(buffer), "%s/macos.txt", get_logo_path());
     #endif
@@ -53,9 +58,9 @@ const char *get_logo(char *arg_logo) {
 
     static char buffer[256];
 #ifdef __linux__
-    snprintf(buffer, sizeof(buffer), "%s/macos.txt", get_logo_path());
+    snprintf(buffer, sizeof(buffer), "%s/%s.txt", get_logo_path(), info->os_id);    
 #elif defined(__APPLE__)
-    snprintf(buffer, sizeof(buffer), "%s/linux_unknown.txt", get_logo_path());
+    snprintf(buffer, sizeof(buffer), "%s/macos.txt", get_logo_path());
 #endif
     return buffer;
 }

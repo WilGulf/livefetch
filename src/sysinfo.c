@@ -3,6 +3,8 @@
 #endif 
 
 #include "sysinfo.h"
+#include "paths.h"
+#include "util.h"
 
 #include <string.h>
 #include <stdio.h>
@@ -12,6 +14,7 @@
 #include <assert.h>
 #include <time.h>
 #include <stdlib.h>
+#include <ctype.h>
 
 #ifdef __linux__
 #elif defined(__APPLE__)
@@ -66,7 +69,63 @@ void get_hostname(struct sysinfo *info) {
 
 void get_os(struct sysinfo *info) {
 #ifdef __linux__
-    
+    FILE *file = fopen(path_exists("/etc/os-release") ? "/etc/os-release" : "/usr/lib/os-release", "r");
+    if (file != NULL) {
+        char line[256];
+        char name[128] = "";
+        char version[128] = "";
+        while (fgets(line, sizeof(line), file)) {
+            if (strncmp(line, "ID", 2) == 0 && line[2] == '=') {
+                int i = 0;
+                while (line[2 + i]) {
+                    info->os_id[i] = line[2 + i];
+                    i++;
+                }
+
+                info->os_id[i] = '\0';
+            }
+
+            if (strncmp(line, "NAME", 4) == 0 && line[4] == '=') {
+                int i = 0;
+                while (line[4 + i]) {
+                    name[i] = line[4 + i];
+                    i++;
+                }
+                name[i] = '\0';
+            }
+            if (strncmp(line, "VERSION", 7) == 0 && line[7] == '=') {
+                int i = 0;
+                while (line[7 + i]) {
+                    version[i] = line[7 + i];
+                    i++;
+                }
+                version[i] = '\0';
+            }
+
+            if (strncmp(line, "PRETTY_NAME", 11) == 0 && line[11] == '=') {
+                int i = 0;
+                while (line[11 + i]) {
+                    info->os[i] = line[11 + i];
+                    i++;
+                }
+
+                info->os[i] = '\0';
+            }
+            
+        }
+
+        if (strcmp(info->os, "") == 0) {
+            snprintf(info->os, sizeof(info->os), "%s %s", name, version);
+        }
+
+        clean_string(info->os);
+        clean_string(info->os_id);
+
+        fclose(file);
+    } else {
+        //strncmp()
+        strcpy(info->os_id, "linux_unknown");
+    }
 #elif defined(__APPLE__)
     char buffer[32];
     get_command_out("sw_vers -productVersion", buffer);
@@ -219,9 +278,36 @@ void get_mem(struct sysinfo *info) {
     int64_t total_bytes = 0;
     int64_t used_bytes = 0;
 #ifdef __linux__
-    
+    int64_t available_bytes = 0;
+    FILE *file = fopen("/proc/meminfo", "r");
+    if (file != NULL) {
+        char line[256];
+        while (fgets(line, sizeof(line), file)) {
+            if (strncmp(line, "MemTotal:", 9) == 0) {
+                const char *start_ptr = strpbrk(line, "0123456789");
+                if (start_ptr != NULL) {
+                    char *end_ptr;
+                    unsigned long long int result = strtoull(start_ptr, &end_ptr, 10);
+                    total_bytes = (int64_t) result;
+                }
+            } else if (strncmp(line, "MemAvailable:", 8) == 0) {
+                const char *start_ptr = strpbrk(line, "0123456789");
+                if (start_ptr != NULL) {
+                    char *end_ptr;
+                    unsigned long long int result = strtoull(start_ptr, &end_ptr, 10);
+                    available_bytes = (int64_t) result;
+                }
+            }        
+        }
+
+        total_bytes = total_bytes * 1024;
+        available_bytes = available_bytes * 1024;
+        used_bytes = total_bytes - available_bytes;
+
+        fclose(file);        
+    }
 #elif defined(__APPLE__)
-    total_bytes;
+    //total_bytes;
     size_t size;
     size = sizeof(int64_t);
     sysctlbyname("hw.memsize", &total_bytes, &size, NULL, 0);
@@ -247,7 +333,39 @@ void get_mem(struct sysinfo *info) {
 
 void get_swap(struct sysinfo *info) {
 #ifdef __linux__
-    
+    int64_t total_bytes = 0;
+    int64_t used_bytes = 0;
+    int64_t available_bytes = 0;
+
+    FILE *file = fopen("/proc/meminfo", "r");
+    if (file != NULL) {
+        char line[256];
+        while (fgets(line, sizeof(line), file)) {
+            if (strncmp(line, "SwapTotal:", 9) == 0) {
+                const char *start_ptr = strpbrk(line, "0123456789");
+                if (start_ptr != NULL) {
+                    char *end_ptr;
+                    unsigned long long int result = strtoull(start_ptr, &end_ptr, 10);
+                    total_bytes = (int64_t) result;
+                }
+            } else if (strncmp(line, "SwapFree:", 8) == 0) {
+                const char *start_ptr = strpbrk(line, "0123456789");
+                if (start_ptr != NULL) {
+                    char *end_ptr;
+                    unsigned long long int result = strtoull(start_ptr, &end_ptr, 10);
+                    available_bytes = (int64_t) result;
+                }
+            }        
+        }
+
+        total_bytes = total_bytes * 1024;
+        available_bytes = available_bytes * 1024;
+        used_bytes = total_bytes - available_bytes;
+
+        fclose(file);        
+    }
+
+    bytes_to_barinfo(used_bytes, total_bytes, info->swap, sizeof(info->swap));
 #elif defined(__APPLE__)
     struct xsw_usage swap;
     size_t size = sizeof(struct xsw_usage);

@@ -273,6 +273,7 @@ int main(int argc, char *argv[]) {
     }
 
     // INIT //
+    init_modules();
     initscr();
     start_color();
     use_default_colors();
@@ -307,13 +308,13 @@ int main(int argc, char *argv[]) {
     for (int args_i = 0; args_i < argc; args_i++) {
         if ((strcmp(argv[args_i], "-l") == 0) || (strcmp(argv[args_i], "--logo") == 0)) {
             if (args_i + 1 < argc) {
-                file = fopen(get_logo(argv[args_i + 1]), "r");
+                file = fopen(get_logo(argv[args_i + 1], &system_info), "r");
                 logo_arg = true;
             }
         }
     }
     if (!logo_arg) {
-        file = fopen(get_logo(NULL), "r");
+        file = fopen(get_logo(NULL, &system_info), "r");
     }
 
     // MODULES //
@@ -323,8 +324,6 @@ int main(int argc, char *argv[]) {
             modules++;
         }
     }
-
-    init_modules();
 
     clear();
 

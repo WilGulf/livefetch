@@ -4,6 +4,9 @@
 struct sysinfo {
     char hostname[256];
     char os[256];
+#ifdef __linux__
+    char os_id[256];
+#endif
     char kernel[256];
     char uptime[256];
     char package_man[256];
