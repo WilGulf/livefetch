@@ -14,7 +14,7 @@
 #include "util.h"
 
 #define MAJOR_VERSION 1
-#define MINOR_VERSION 1
+#define MINOR_VERSION 2
 #define VERSION_PATCH 0
 
 #define RED 1
