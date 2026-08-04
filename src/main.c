@@ -11,6 +11,7 @@
 #include "sysinfo.h"
 #include "paths.h"
 #include "globals.h"
+#include "util.h"
 
 #define MAJOR_VERSION 1
 #define MINOR_VERSION 1
@@ -313,12 +314,13 @@ int main(int argc, char *argv[]) {
         parse_config(get_config_path());
     }
 
-    bool updating_visualizer = get_updating_visualizer();
+    bool updating_visualizer = true;
 
     // LOGO //
     FILE* file;
     bool logo_arg = false;
     bool force_update_arg = false;
+    bool updating_visualizer_arg = false;
     for (int args_i = 0; args_i < argc; args_i++) {
         if ((strcmp(argv[args_i], "-l") == 0) || (strcmp(argv[args_i], "--logo") == 0)) {
             if (args_i + 1 < argc) {
@@ -328,21 +330,20 @@ int main(int argc, char *argv[]) {
         } else if (strcmp(argv[args_i], "--force-update") == 0) {
             if (args_i + 1 < argc) {
                 force_update_arg = true;
-                if (strcmp(argv[args_i + 1], "yes") == 0)
-                    force_update = true;
-                else if (strcmp(argv[args_i + 1], "true") == 0)
-                    force_update = true;
-                else if (strcmp(argv[args_i + 1], "1") == 0)
-                    force_update = true;
-                
-                else if (strcmp(argv[args_i + 1], "no") == 0)
-                    force_update = false;
-                else if (strcmp(argv[args_i + 1], "false") == 0)
-                    force_update = false;
-                else if (strcmp(argv[args_i + 1], "0") == 0)
-                    force_update = false;
-                else
+                if (string_is_statement(true, argv[args_i + 1]) || string_is_statement(false, argv[args_i + 1])) {
+                    force_update = string_is_statement(true, argv[args_i + 1]);
+                } else {
                     force_update_arg = false;
+                }
+            }
+        } else if (strcmp(argv[args_i], "--updating-visualizer") == 0) {
+            if (args_i + 1 < argc) {
+                updating_visualizer_arg = true;
+                if (string_is_statement(true, argv[args_i + 1]) || string_is_statement(false, argv[args_i + 1])) {
+                    updating_visualizer = string_is_statement(true, argv[args_i + 1]);
+                } else {
+                    updating_visualizer_arg = false;
+                }
             }
         }
     }
@@ -351,6 +352,9 @@ int main(int argc, char *argv[]) {
     }
     if (!force_update_arg) {
         force_update = get_force_update();
+    }
+    if (!updating_visualizer_arg) {
+        updating_visualizer = get_updating_visualizer();
     }
 
     // MODULES //

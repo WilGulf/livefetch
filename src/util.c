@@ -20,3 +20,24 @@ void clean_string(char *buffer) {
     }
 }
 
+bool string_is_statement(bool statement, const char *str) {
+    if (statement) {
+         if (strncmp(str, "yes", 3) == 0)
+        return true;
+    else if (strncmp(str, "true", 4) == 0)
+        return true;
+    else if (strncmp(str, "1", 1) == 0)
+        return true;
+    else
+        return false;
+    } else {
+        if (strncmp(str, "no", 2) == 0)
+            return true;
+        else if (strncmp(str, "false", 5) == 0)
+            return true;
+        else if (strncmp(str, "0", 1) == 0)
+            return true;
+        else
+            return false;
+    }
+}
