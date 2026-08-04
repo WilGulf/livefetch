@@ -8,6 +8,7 @@
 #include "paths.h"
 #include "sysinfo.h"
 #include "util.h"
+#include "globals.h"
 
 char keys[16][64];
 int keys_int = 0;
@@ -65,14 +66,31 @@ const char *get_logo(char *arg_logo, struct sysinfo *info) {
     return buffer;
 }
 
+bool get_force_update() {
+    for (int i = 0; i < 16; i++) {
+        if (strcmp(keys[i], "force_update") == 0) {
+            if (strncmp(values[i], "yes",3) == 0)
+                return true;
+            else if (strncmp(values[i], "true", 4) == 0)
+                return true;
+            else if (strncmp(values[i], "1", 1) == 0)
+                return true;
+            else
+                return false;
+        }
+    }
+
+    return false;
+}
+
 bool get_updating_visualizer() {
         for (int i = 0; i < 16; i++) {
             if (strcmp(keys[i], "updating_visualizer") == 0) {
-                if (strcmp(values[i], "no") == 0)
+                if (strncmp(values[i], "no", 2) == 0)
                     return false;
-                else if (strcmp(values[i], "false") == 0)
+                else if (strncmp(values[i], "false", 5) == 0)
                     return false;
-                else if (strcmp(values[i], "0") == 0)
+                else if (strncmp(values[i], "0", 1) == 0)
                     return false;
                 else
                     return true;

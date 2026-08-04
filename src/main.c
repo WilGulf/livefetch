@@ -10,6 +10,7 @@
 #include "config.h"
 #include "sysinfo.h"
 #include "paths.h"
+#include "globals.h"
 
 #define MAJOR_VERSION 1
 #define MINOR_VERSION 1
@@ -317,16 +318,39 @@ int main(int argc, char *argv[]) {
     // LOGO //
     FILE* file;
     bool logo_arg = false;
+    bool force_update_arg = false;
     for (int args_i = 0; args_i < argc; args_i++) {
         if ((strcmp(argv[args_i], "-l") == 0) || (strcmp(argv[args_i], "--logo") == 0)) {
             if (args_i + 1 < argc) {
                 file = fopen(get_logo(argv[args_i + 1], &system_info), "r");
                 logo_arg = true;
             }
+        } else if (strcmp(argv[args_i], "--force-update") == 0) {
+            if (args_i + 1 < argc) {
+                force_update_arg = true;
+                if (strcmp(argv[args_i + 1], "yes") == 0)
+                    force_update = true;
+                else if (strcmp(argv[args_i + 1], "true") == 0)
+                    force_update = true;
+                else if (strcmp(argv[args_i + 1], "1") == 0)
+                    force_update = true;
+                
+                else if (strcmp(argv[args_i + 1], "no") == 0)
+                    force_update = false;
+                else if (strcmp(argv[args_i + 1], "false") == 0)
+                    force_update = false;
+                else if (strcmp(argv[args_i + 1], "0") == 0)
+                    force_update = false;
+                else
+                    force_update_arg = false;
+            }
         }
     }
     if (!logo_arg) {
         file = fopen(get_logo(NULL, &system_info), "r");
+    }
+    if (!force_update_arg) {
+        force_update = get_force_update();
     }
 
     // MODULES //
