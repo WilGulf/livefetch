@@ -176,7 +176,7 @@ void module(int num, bool is_updating, int color) {
                 break;
             }
             case 99: {
-                attron(COLOR_PAIR((color == BLACK) ? BLACK : WHITE));
+                attron(COLOR_PAIR(color));
                 printw("---------------");
                 break;
             }
