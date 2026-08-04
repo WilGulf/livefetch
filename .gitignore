@@ -5,5 +5,6 @@ livefetch
 new_release.txt
 test_install/
 release/
+default.conf
 *test*
 *.tar.gz

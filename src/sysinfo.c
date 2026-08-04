@@ -150,7 +150,7 @@ void get_os(struct sysinfo *info) {
 #elif defined(__APPLE__)
     char buffer[32];
     get_command_out("sw_vers -productVersion", buffer);
-    snprintf(setlocaleinfo->os, sizeof(info->os), "macOS %s", buffer);
+    snprintf(info->os, sizeof(info->os), "macOS %s", buffer);
 #endif
 }
 

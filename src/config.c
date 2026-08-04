@@ -39,31 +39,23 @@ const char *get_logo(char *arg_logo, struct sysinfo *info) {
         snprintf(buffer, sizeof(buffer), "%s/macos.txt", get_logo_path());
     #endif
         return buffer;
+    }
         
     if (strcmp(logo, "none") == 0) {
         return NULL;
     }
-    } else {
-        int j = 0;
-        while (logo[j]) {
-            if (logo[j] == '/') {
-                return logo;
-            }
-            j++;
+    
+    int j = 0;
+    while (logo[j]) {
+        if (logo[j] == '/') {
+            return logo;
         }
-
-        static char buffer[256];
-        snprintf(buffer, sizeof(buffer), "%s/%s.txt", get_logo_path(), logo);
-        return (const char *)buffer;
+        j++;
     }
 
     static char buffer[256];
-#ifdef __linux__
-    snprintf(buffer, sizeof(buffer), "%s/%s.txt", get_logo_path(), info->os_id);    
-#elif defined(__APPLE__)
-    snprintf(buffer, sizeof(buffer), "%s/macos.txt", get_logo_path());
-#endif
-    return buffer;
+    snprintf(buffer, sizeof(buffer), "%s/%s.txt", get_logo_path(), logo);
+    return (const char *)buffer;
 }
 
 bool get_force_update() {
