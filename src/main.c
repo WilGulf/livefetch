@@ -17,6 +17,9 @@
 #define MINOR_VERSION 2
 #define VERSION_PATCH 0
 
+#define MAX_ROWS 64
+#define MAX_COLS 256
+
 #define RED 1
 #define GREEN 2
 #define YELLOW 3
@@ -136,7 +139,7 @@ void module(int num, bool is_updating, int color) {
                 break;
             }
             case 10: {
-                two_color_print("CPU: ", "%s", (color == BLACK) ? BLACK : WHITE, system_info.gpu);
+                two_color_print("GPU: ", "%s", (color == BLACK) ? BLACK : WHITE, system_info.gpu);
                 break;
             }
             case 11: {
@@ -370,7 +373,12 @@ int main(int argc, char *argv[]) {
     clear();
 
     // LOAD LOGO //
-    char logo[64][256];
+    typedef struct {
+        char c;
+        int color;
+    } Cell;
+
+    Cell logo[MAX_ROWS][MAX_COLS];
     char line[256];
     int longest_line = 0;
     int lines = 0;
@@ -415,16 +423,20 @@ int main(int argc, char *argv[]) {
                     main_color = WHITE;
 
             } else {
-                int j = 0;
+                int current_color;
+
                 int color_counter = 0;
                 int prev_longest = longest_line;
-                while (line[j]) {
-                    if (line[j] == '$') {
+                while (line[i] && line[i] != '\n') {
+                    if (line[i] == '$' && line[i + 1] != '\0') {
                         color_counter++;
+                        current_color = line[i + 1] - '0';
+                        i += 2;
+                    } else {
+                        logo[lines][i - (2 * color_counter)] = (Cell){line[i], current_color};
+                        i++;
                     }
-                    j++;
                 }
-                strcpy(logo[lines], line);
 
                 if (strlen(line) - (2 * color_counter) > (uint32_t)prev_longest) {
                     longest_line = strlen(line) - (2 * color_counter);            
@@ -432,6 +444,8 @@ int main(int argc, char *argv[]) {
 
                 lines++;
             }
+            
+            logo[lines][i] = (Cell){'\0', 0};
             is_color_line = false;
         }
 
@@ -456,35 +470,24 @@ int main(int argc, char *argv[]) {
                 char segment[256];
                 int seg_len = 0;
 
-                while (logo[i][j]) {
-                    if (logo[i][j] != '\n') {
-                        if (logo[i][j] == '$') {
-                            if (seg_len > 0) {
-                                segment[seg_len] = '\0';
-                                printw("%s", segment);
-                                seg_len = 0;
-                            }
-                            if (!(i == line_to_update && updating_visualizer)) {
-                                attron(COLOR_PAIR((logo[i][j + 1] - '0')));
-                            } else {
-                                attron(COLOR_PAIR(BLACK));
-                            }
-
-                            //
-                            j++;
+                while (logo[i][j].c) {
+                    if (logo[i][j].c != '\n') {
+                        if (!(i == line_to_update && updating_visualizer)) {
+                            attron(COLOR_PAIR((logo[i][j].color)));
                         } else {
-                            segment[seg_len++] = logo[i][j];
-                            chars_displayed++;
+                            attron(COLOR_PAIR(BLACK));
                         }
+
+                        segment[seg_len++] = logo[i][j].c;
+                        chars_displayed++;
+                        j++;
                     }
-                    j++;
                 }
 
                 if (seg_len > 0) {
                     segment[seg_len] = '\0';
                     printw("%s", segment);
                 }
-
             } else {
                 if (!(i == line_to_update && updating_visualizer)) {
                     attron(COLOR_PAIR(main_color));
