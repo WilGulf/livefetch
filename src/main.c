@@ -386,14 +386,9 @@ int main(int argc, char *argv[]) {
         while (fgets(line, sizeof(line), file)) {
             bool is_color_line = false;
             int i = 0;
-            char identifier[] = "MAIN_COLOR=";
-            for (; (uint64_t)i < (strlen(identifier)); i++) {
-                if (line[i] == identifier[i]) {
-                    is_color_line = true;
-                } else {
-                    is_color_line = false;
-                    break;
-                }
+            if (strncmp(line, "MAIN_COLOR=", strlen("MAIN_COLOR=")) == 0) {
+                is_color_line = true;
+                i = strlen("MAIN_COLOR=");
             }
 
             if (is_color_line) {
@@ -405,22 +400,14 @@ int main(int argc, char *argv[]) {
                     i++;
                 }
 
-                if (strcmp(color, "BLACK") == 0)
-                    main_color = BLACK;
-                else if (strcmp(color, "RED") == 0)
-                    main_color = RED;
-                else if (strcmp(color, "GREEN") == 0)
-                    main_color = GREEN;
-                else if (strcmp(color, "YELLOW") == 0)
-                    main_color = YELLOW;
-                else if (strcmp(color, "BLUE") == 0)
-                    main_color = BLUE;
-                else if (strcmp(color, "MAGENTA") == 0)
-                    main_color = MAGENTA;
-                else if (strcmp(color, "CYAN") == 0)
-                    main_color = CYAN;
-                else if (strcmp(color, "WHITE") == 0)
-                    main_color = WHITE;
+                if (strcmp(color, "BLACK") == 0) main_color = BLACK;
+                else if (strcmp(color, "RED") == 0) main_color = RED;
+                else if (strcmp(color, "GREEN") == 0) main_color = GREEN;
+                else if (strcmp(color, "YELLOW") == 0) main_color = YELLOW;
+                else if (strcmp(color, "BLUE") == 0) main_color = BLUE;
+                else if (strcmp(color, "MAGENTA") == 0) main_color = MAGENTA;
+                else if (strcmp(color, "CYAN") == 0) main_color = CYAN;
+                else if (strcmp(color, "WHITE") == 0) main_color = WHITE;
 
             } else {
                 int current_color;
