@@ -6,6 +6,7 @@
 #include <stdarg.h>
 #include <locale.h>
 #include <stdlib.h>
+#include <math.h>
 
 #include "config.h"
 #include "sysinfo.h"
@@ -265,8 +266,71 @@ void module(int num, bool is_updating, int color) {
     }
 }
 
-int modules = 0;
+typedef struct {
+    char c;
+    int color;
+} Cell;
+
+float center_x;
+float center_y;
+
+int longest_line = 0;
+int lines = 0;
+
 int main_color = 7;
+
+void rotate_logo(Cell logo[MAX_ROWS][MAX_COLS], Cell dest[MAX_ROWS][MAX_COLS], float angle) {
+    Cell temp[MAX_ROWS][MAX_COLS];
+    float z_buffer[MAX_ROWS][MAX_COLS];
+
+    memset(temp, 0, sizeof(temp));
+    for (int i = 0; i < MAX_ROWS; i++) {
+        for (int j = 0; j < MAX_COLS; j++) {
+            //temp[i][j].color = main_color;
+            //temp[i][j].c = '\0';
+            z_buffer[i][j] = -9999.0f;
+        }
+    }
+
+    for (int i = 0; i < MAX_ROWS; i++) {
+        int j = 0;
+        for (; j < longest_line; j++) {
+            //temp[i][j].color = main_color;
+            temp[i][j].c = ' ';
+        }
+        temp[i][j].c = '\0';
+    }
+
+    for (int y = 0; y < MAX_ROWS; y++) {
+        for (int x = 0; x < MAX_COLS; x++) {
+            if (logo[y][x].c != '\0' && logo[y][x].c != ' ') {
+                float temp_x = x - center_x;
+                float temp_y = y - center_y;
+                float z = 0;
+
+                float new_x = temp_x * cos(angle);
+                float new_z = -temp_x * sin(angle);
+                
+                int target_col = round(new_x) + center_x;
+
+                if (0 <= target_col && target_col < MAX_COLS) {
+                    if (z_buffer[y][target_col] <= new_z) {
+                        z_buffer[y][target_col] = new_z;
+                        temp[y][target_col] = logo[y][x];
+                    }
+                }
+            }
+        }
+    }
+
+    for (int i = 0; i < MAX_ROWS; i++) {
+        for (int j = 0; j < MAX_COLS; j++) {
+            dest[i][j] = temp[i][j];
+        }
+    }
+}
+
+int modules = 0;
 
 int main(int argc, char *argv[]) {
     for (int args_i = 0; args_i < argc; args_i++) {
@@ -320,12 +384,14 @@ int main(int argc, char *argv[]) {
     }
 
     bool updating_visualizer = true;
+    bool spin_logo = false;
 
     // LOGO //
     FILE* file;
     bool logo_arg = false;
     bool force_update_arg = false;
     bool updating_visualizer_arg = false;
+    bool spin_logo_arg = false;
     for (int args_i = 0; args_i < argc; args_i++) {
         if ((strcmp(argv[args_i], "-l") == 0) || (strcmp(argv[args_i], "--logo") == 0)) {
             if (args_i + 1 < argc) {
@@ -350,6 +416,15 @@ int main(int argc, char *argv[]) {
                     updating_visualizer_arg = false;
                 }
             }
+        } else if (strcmp(argv[args_i], "--spin-logo") == 0) {
+            if (args_i + 1 < argc) {
+                spin_logo_arg = true;
+                if (string_is_statement(true, argv[args_i + 1]) || string_is_statement(false, argv[args_i + 1])) {
+                    spin_logo = string_is_statement(true, argv[args_i + 1]);
+                } else {
+                    spin_logo_arg = false;
+                }
+            }
         }
     }
     if (!logo_arg) {
@@ -360,6 +435,9 @@ int main(int argc, char *argv[]) {
     }
     if (!updating_visualizer_arg) {
         updating_visualizer = get_value_bool("updating_visualizer", true);
+    }
+    if (!spin_logo_arg) {
+        spin_logo = get_value_bool("spin_logo", false);
     }
 
     // MODULES //
@@ -373,19 +451,18 @@ int main(int argc, char *argv[]) {
     clear();
 
     // LOAD LOGO //
-    typedef struct {
-        char c;
-        int color;
-    } Cell;
-
     Cell logo[MAX_ROWS][MAX_COLS];
+    memset(logo, 0, sizeof(logo));
+
     char line[256];
-    int longest_line = 0;
-    int lines = 0;
+    
     if (file != NULL) {
         while (fgets(line, sizeof(line), file)) {
             bool is_color_line = false;
             int i = 0;
+            int color_counter = 0;
+            int current_color;
+
             if (strncmp(line, "MAIN_COLOR=", strlen("MAIN_COLOR=")) == 0) {
                 is_color_line = true;
                 i = strlen("MAIN_COLOR=");
@@ -410,9 +487,8 @@ int main(int argc, char *argv[]) {
                 else if (strcmp(color, "WHITE") == 0) main_color = WHITE;
 
             } else {
-                int current_color;
-
-                int color_counter = 0;
+                current_color = 0;
+                color_counter = 0;
                 int prev_longest = longest_line;
                 while (line[i] && line[i] != '\n') {
                     if (line[i] == '$' && line[i + 1] != '\0') {
@@ -428,22 +504,37 @@ int main(int argc, char *argv[]) {
                 if (strlen(line) - (2 * color_counter) > (uint32_t)prev_longest) {
                     longest_line = strlen(line) - (2 * color_counter);            
                 }
-
-                lines++;
             }
             
-            logo[lines][i] = (Cell){'\0', 0};
+            logo[lines][i - (2 * color_counter)] = (Cell){'\0', 0};
             is_color_line = false;
+            lines++;
         }
 
         fclose(file);
     }
 
+    center_x = longest_line / 2.0f;
+    center_y = lines / 2.0f;
+
+    Cell buffer[MAX_ROWS][MAX_COLS];
+    //memset(buffer, 0, sizeof(buffer));
+    for (int i = 0; i < lines; i++) {
+        for (int j = 0; j < longest_line; j++) {
+            buffer[i][j] = logo[i][j];
+        }
+    }
+
     // MAIN LOOP //
     int line_to_update = 0;
+    float angle = 0;
     while (1) {
         erase();
         attrset(A_NORMAL);
+
+        if (spin_logo) {
+            rotate_logo(logo, buffer, angle);
+        }
 
         for (int i = 0; i < ((lines > modules) ? lines : modules);) {      
             for (int times = 0; times < 3; times++) {
@@ -457,24 +548,25 @@ int main(int argc, char *argv[]) {
                 char segment[256];
                 int seg_len = 0;
 
-                while (logo[i][j].c) {
-                    if (logo[i][j].c != '\n') {
+                while (buffer[i][j].c) {
+                    if (buffer[i][j].c != '\n') {
                         if (!(i == line_to_update && updating_visualizer)) {
-                            attron(COLOR_PAIR((logo[i][j].color)));
+                            attron(COLOR_PAIR((buffer[i][j].color)));
                         } else {
                             attron(COLOR_PAIR(BLACK));
                         }
 
-                        segment[seg_len++] = logo[i][j].c;
+                        //segment[seg_len++] = buffer[i][j].c;
+                        printw("%c", buffer[i][j].c);
                         chars_displayed++;
                         j++;
                     }
                 }
 
-                if (seg_len > 0) {
+                /*if (seg_len > 0) {
                     segment[seg_len] = '\0';
                     printw("%s", segment);
-                }
+                }*/
             } else {
                 if (!(i == line_to_update && updating_visualizer)) {
                     attron(COLOR_PAIR(main_color));
@@ -496,6 +588,7 @@ int main(int argc, char *argv[]) {
 
         refresh();
         move(0, 0);
+        angle += 0.05;
 
         if (line_to_update < ((lines > modules) ? lines : modules)) {
             line_to_update++;
