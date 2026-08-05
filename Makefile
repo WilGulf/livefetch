@@ -1,6 +1,6 @@
 CC = cc
 CFLAGS = -Wall -Wextra -std=c17 -O2
-LDLIBS = -lncurses
+LDLIBS = -lncurses -lm
 LDFLAGS =
 
 PREFIX ?= /usr/local
