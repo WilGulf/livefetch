@@ -295,6 +295,15 @@ void get_gpu(struct sysinfo *info) {
     snprintf(info->gpu, sizeof(info->gpu), "%s (%d cores)", gpu, cores);
 }
 
+#define RED 1
+#define GREEN 2
+#define YELLOW 3
+char *get_text_color(int color, char *text) {
+    static char buffer[256];
+    snprintf(buffer, sizeof(buffer), "\e[1;3%dm%s\e[0m", color, text);
+    return buffer;
+}
+// ░▒▓█
 void bytes_to_barinfo(int64_t used_bytes, int64_t total_bytes, char *buffer, int size) {
     double mb_used = used_bytes / 1024 / 1024;
     double gb_used = mb_used / 1024;
@@ -304,7 +313,7 @@ void bytes_to_barinfo(int64_t used_bytes, int64_t total_bytes, char *buffer, int
 
     double temp = ((double)used_bytes / total_bytes);
     int percent = temp * 100;
-    char bar_used[11] = "";
+    char bar_used[16] = "";
     char bar_avail[11] = "";
     char mem_used[8] = "";
     if (gb_used > 0) {
@@ -591,6 +600,15 @@ int32_t get_files_in_dir(DIR *dir) {
     return num_elements;
 }
 
+#define RED 1
+#define GREEN 2
+#define YELLOW 3
+#define BLUE 4
+#define MAGENTA 5
+#define CYAN 6
+#define WHITE 7
+#define BLACK 8
+
 void get_packages(struct sysinfo *info) {
 #ifdef __linux__
     int64_t packages = 0;
@@ -745,4 +763,6 @@ void get_battery(struct sysinfo *info) {
         IOObjectRelease(iterator);
     }
 #endif
+
+    info->battery_color = (info->battery >= 40) ? GREEN : (info->battery >= 20) ? YELLOW : RED;
 }

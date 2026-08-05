@@ -167,7 +167,8 @@ void module(int num, bool is_updating, int color) {
                 if (system_info.battery == 111) {
                     two_color_print("Battery: ", "%s", (color == BLACK) ? BLACK : WHITE, "Running on AC");
                 } else {
-                    two_color_print("Battery: ", "%d", (color == BLACK) ? BLACK : WHITE, system_info.battery);
+                    two_color_print("Battery: ", "%d", (color == BLACK) ? BLACK : system_info.battery_color, system_info.battery);
+                    printw("%%");
                 }
                 
                 break;
@@ -241,7 +242,8 @@ void module(int num, bool is_updating, int color) {
                 if (system_info.battery == 111) {
                     two_color_print("Battery: ", "%s", WHITE, "Running on AC");
                 } else {
-                    two_color_print("Battery: ", "%d", WHITE, system_info.battery);
+                    two_color_print("Battery: ", "%d", system_info.battery_color, system_info.battery);
+                    printw("%%");
                 }
                 
                 break;

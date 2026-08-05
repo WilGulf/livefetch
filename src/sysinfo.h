@@ -22,6 +22,7 @@ struct sysinfo {
     char disk[16];
     char local_ip[256];
     int battery;
+    int battery_color;
     char locale[256];
 };
 
