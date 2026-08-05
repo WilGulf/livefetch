@@ -266,6 +266,11 @@ void module(int num, bool is_updating, int color) {
     }
 }
 
+#define Y 1
+#define X 2
+
+int spin_axis = Y;
+
 typedef struct {
     char c;
     int color;
@@ -300,16 +305,29 @@ void rotate_logo(Cell logo[MAX_ROWS][MAX_COLS], Cell dest[MAX_ROWS][MAX_COLS], f
         for (int x = 0; x < MAX_COLS; x++) {
             if (logo[y][x].c != '\0' && logo[y][x].c != ' ') {
                 float temp_x = x - center_x;
+                float temp_y = y - center_y;
+                
+                float new_x = 0.0;
+                float new_y = 0.0;
+                float new_z = 0.0;
 
-                float new_x = temp_x * cos(angle);
-                float new_z = -temp_x * sin(angle);
+                if (spin_axis == X) {
+                    new_x = temp_x;
+                    new_y = temp_y * cos(angle);
+                    new_z = temp_y * sin(angle);
+                } else {
+                    new_x = temp_x * cos(angle);
+                    new_y = temp_y;
+                    new_z = -temp_x * sin(angle);
+                }
                 
                 int target_col = round(new_x) + center_x;
+                int target_row = round(new_y) + center_y;
 
                 if (0 <= target_col && target_col < MAX_COLS) {
-                    if (z_buffer[y][target_col] <= new_z) {
-                        z_buffer[y][target_col] = new_z;
-                        temp[y][target_col] = logo[y][x];
+                    if (z_buffer[target_row][target_col] <= new_z) {
+                        z_buffer[target_row][target_col] = new_z;
+                        temp[target_row][target_col] = logo[y][x];
                     }
                 }
             }
@@ -419,6 +437,13 @@ int main(int argc, char *argv[]) {
                     spin_logo_arg = false;
                 }
             }
+        } else if (strcmp(argv[args_i], "--spin-axis") == 0) {
+            if (args_i + 1 < argc) {
+                if (strcmp(argv[args_i + 1], "X") == 0 || strcmp(argv[args_i + 1], "x") == 0)
+                    spin_axis = X;
+                else if (strcmp(argv[args_i + 1], "Y") == 0 || strcmp(argv[args_i + 1], "y") == 0)
+                    spin_axis = Y;
+            }
         }
     }
     if (!logo_arg) {
@@ -521,6 +546,7 @@ int main(int argc, char *argv[]) {
     // MAIN LOOP //
     int line_to_update = 0;
     float angle = 0;
+    bool first = true;
     while (1) {
         erase();
         attrset(A_NORMAL);
@@ -574,13 +600,16 @@ int main(int argc, char *argv[]) {
         move(0, 0);
         angle += 0.05;
 
-        if (line_to_update < ((lines > modules) ? lines : modules)) {
-            line_to_update++;
-        } else {
-            line_to_update = 0;
+        if (!first) {
+            if (line_to_update < ((lines > modules) ? lines : modules)) {
+                line_to_update++;
+            } else {
+                line_to_update = 0;
+            }
         }
+        first = !first;
 
-        napms(100);
+        napms(50);
     }
 
     endwin();
