@@ -352,14 +352,24 @@ int main(int argc, char *argv[]) {
             printf("\033[1;4mUsage:\033[0m\033[1m livefetch\033[0m <?options>\n");
             printf("\n");
             printf("\033[1;4mOptions:\033[0m\n");
-            printf("\033[1m   -h, --help     \033[0m");
+            printf("\033[1m   -h, --help            \033[0m");
             printf("Show this help message\n");
-            printf("\033[1m   -v, --version  \033[0m");
-            printf("Show the full Livefetch version\n");
-            printf("\033[1m   -l, --logo     \033[0m");
-            printf("Set the logo source. Use 'none' to disable logo output\n");
-            printf("\033[1m   -c, --config   \033[0m");
+            printf("\033[1m   -v, --version         \033[0m");
+            printf("Show Livefetch version\n");
+            printf("\033[1m   -l, --logo <logo>     \033[0m");
+            printf("Set the logo display. Use 'none' to disable logo output\n");
+            printf("\033[1m   -c, --config <path>   \033[0m");
             printf("Specify the config file to load\n");
+            printf("\n");
+            printf("\033[1m   --updating-visualizer <bool>    \033[0m");
+            printf("Set if the updating visualizer should be shown\n");
+            printf("\033[1m   --force-update <bool>           \033[0m");
+            printf("Force updates on slow modules\n");
+            printf("\033[1m   --spin-logo <bool>              \033[0m");
+            printf("Spins the logo around\n");
+            printf("\033[1m   --spin-axis <X, Y>              \033[0m");
+            printf("Change the which axis the logo spins around\n");
+            
             return 0;
         } else if ((strcmp(argv[args_i], "-v") == 0) || (strcmp(argv[args_i], "--version") == 0)) {
             printf("Livefetch %d.%d.%d (%s)\n", MAJOR_VERSION, MINOR_VERSION, VERSION_PATCH, ARCH);
