@@ -58,14 +58,18 @@ const char *get_logo(char *arg_logo, struct sysinfo *info) {
     return (const char *)buffer;
 }
 
-bool get_value_bool(char *key) {
+bool get_value_bool(char *key, bool default_value) {
     for (int i = 0; i < 16; i++) {
         if (strcmp(keys[i], key) == 0) {
-            return string_is_statement(true, values[i]);
+            if (string_is_statement(true, values[i]) || string_is_statement(false, values[i])) {
+                return string_is_statement(true, values[i]);
+            } else {
+                return default_value;
+            }
         }
     }
 
-    return false;
+    return default_value;
 }
 
 int string_to_module_num(const char *string) {

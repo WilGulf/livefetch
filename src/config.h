@@ -6,7 +6,7 @@
 
 int parse_config(const char *path);
 const char *get_logo(char *arg_logo, struct sysinfo *info);
-bool get_value_bool(char *key);
+bool get_value_bool(char *key, bool default_value);
 int get_module(int num);
 
 #endif
