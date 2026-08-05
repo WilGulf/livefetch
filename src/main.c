@@ -271,13 +271,11 @@ typedef struct {
     int color;
 } Cell;
 
-float center_x;
-float center_y;
+int center_x;
+int center_y;
 
 int longest_line = 0;
 int lines = 0;
-
-int main_color = 7;
 
 void rotate_logo(Cell logo[MAX_ROWS][MAX_COLS], Cell dest[MAX_ROWS][MAX_COLS], float angle) {
     Cell temp[MAX_ROWS][MAX_COLS];
@@ -286,8 +284,6 @@ void rotate_logo(Cell logo[MAX_ROWS][MAX_COLS], Cell dest[MAX_ROWS][MAX_COLS], f
     memset(temp, 0, sizeof(temp));
     for (int i = 0; i < MAX_ROWS; i++) {
         for (int j = 0; j < MAX_COLS; j++) {
-            //temp[i][j].color = main_color;
-            //temp[i][j].c = '\0';
             z_buffer[i][j] = -9999.0f;
         }
     }
@@ -295,7 +291,6 @@ void rotate_logo(Cell logo[MAX_ROWS][MAX_COLS], Cell dest[MAX_ROWS][MAX_COLS], f
     for (int i = 0; i < MAX_ROWS; i++) {
         int j = 0;
         for (; j < longest_line; j++) {
-            //temp[i][j].color = main_color;
             temp[i][j].c = ' ';
         }
         temp[i][j].c = '\0';
@@ -305,8 +300,6 @@ void rotate_logo(Cell logo[MAX_ROWS][MAX_COLS], Cell dest[MAX_ROWS][MAX_COLS], f
         for (int x = 0; x < MAX_COLS; x++) {
             if (logo[y][x].c != '\0' && logo[y][x].c != ' ') {
                 float temp_x = x - center_x;
-                float temp_y = y - center_y;
-                float z = 0;
 
                 float new_x = temp_x * cos(angle);
                 float new_z = -temp_x * sin(angle);
@@ -331,6 +324,7 @@ void rotate_logo(Cell logo[MAX_ROWS][MAX_COLS], Cell dest[MAX_ROWS][MAX_COLS], f
 }
 
 int modules = 0;
+int main_color = 7;
 
 int main(int argc, char *argv[]) {
     for (int args_i = 0; args_i < argc; args_i++) {
@@ -514,11 +508,10 @@ int main(int argc, char *argv[]) {
         fclose(file);
     }
 
-    center_x = longest_line / 2.0f;
-    center_y = lines / 2.0f;
+    center_x = longest_line / 2;
+    center_y = lines / 2;
 
     Cell buffer[MAX_ROWS][MAX_COLS];
-    //memset(buffer, 0, sizeof(buffer));
     for (int i = 0; i < lines; i++) {
         for (int j = 0; j < longest_line; j++) {
             buffer[i][j] = logo[i][j];
@@ -545,9 +538,6 @@ int main(int argc, char *argv[]) {
             if (i < lines) {
                 int j = 0;
 
-                char segment[256];
-                int seg_len = 0;
-
                 while (buffer[i][j].c) {
                     if (buffer[i][j].c != '\n') {
                         if (!(i == line_to_update && updating_visualizer)) {
@@ -556,17 +546,11 @@ int main(int argc, char *argv[]) {
                             attron(COLOR_PAIR(BLACK));
                         }
 
-                        //segment[seg_len++] = buffer[i][j].c;
                         printw("%c", buffer[i][j].c);
                         chars_displayed++;
                         j++;
                     }
                 }
-
-                /*if (seg_len > 0) {
-                    segment[seg_len] = '\0';
-                    printw("%s", segment);
-                }*/
             } else {
                 if (!(i == line_to_update && updating_visualizer)) {
                     attron(COLOR_PAIR(main_color));
