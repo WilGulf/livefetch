@@ -217,7 +217,7 @@ void get_cpu(struct sysinfo *info) {
                 }
 
                 if (line[i] != '\0') {
-                    memmove(line - i - 1, line, strlen(line) + 1);
+                    memmove(line, &line[i] + 1, strlen(&line[i]) + 1);
                     strcpy(cpu, line);
                 }  
             } else if (strncmp(line, "cpu cores", 9) == 0) {
@@ -231,7 +231,7 @@ void get_cpu(struct sysinfo *info) {
                 }
 
                 if (line[i] != '\0') {
-                    memmove(line - i - 1, line, strlen(line) + 1);
+                    memmove(line, &line[i] + 1, strlen(&line[i] + 1) + 1);
                     strcpy(cores, line);
                 }
             }
