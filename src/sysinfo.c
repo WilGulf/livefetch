@@ -245,7 +245,7 @@ void get_cpu(struct sysinfo *info) {
     get_command_out("sysctl -n machdep.cpu.brand_string", cpu);
     get_command_out("sysctl -n hw.physicalcpu", cores);
 #endif
-    snprintf(info->cpu, sizeof(info->cpu), "%s (%s cores)", cpu, cores);
+    snprintf(info->cpu, sizeof(info->cpu), "%s (%s)", cpu, cores);
 }
 
 void get_gpu(struct sysinfo *info) {
@@ -292,7 +292,7 @@ void get_gpu(struct sysinfo *info) {
         IOObjectRelease(iterator);
     }
 #endif
-    snprintf(info->gpu, sizeof(info->gpu), "%s (%d cores)", gpu, cores);
+    snprintf(info->gpu, sizeof(info->gpu), "%s (%d)", gpu, cores);
 }
 
 #define RED 1
@@ -315,18 +315,18 @@ void bytes_to_barinfo(int64_t used_bytes, int64_t total_bytes, char *buffer, int
     int percent = temp * 100;
     char bar_used[16] = "";
     char bar_avail[11] = "";
-    char mem_used[8] = "";
+    char mem_used[16] = "";
     if (gb_used > 0) {
-        snprintf(mem_used, sizeof(mem_used), "%.1fGB", gb_used);
+        snprintf(mem_used, sizeof(mem_used), "%.1f GB", gb_used);
     } else {
-        snprintf(mem_used, sizeof(mem_used), "%.1fMB", mb_used);
+        snprintf(mem_used, sizeof(mem_used), "%.1f MB", mb_used);
     }
 
-    char mem_size[8] = "";
+    char mem_size[16] = "";
     if (gb_size > 0) {
-        snprintf(mem_size, sizeof(mem_size), "%.1fGB", gb_size);
+        snprintf(mem_size, sizeof(mem_size), "%.1f GB", gb_size);
     } else {
-        snprintf(mem_size, sizeof(mem_size), "%.1fMB", mb_size);
+        snprintf(mem_size, sizeof(mem_size), "%.1f MB", mb_size);
     }
 
     int i = 0;
@@ -342,7 +342,7 @@ void bytes_to_barinfo(int64_t used_bytes, int64_t total_bytes, char *buffer, int
     }
     bar_avail[j] = '\0';
 
-    snprintf(buffer, size, "(%s%s)   %s/%s", bar_used, bar_avail, mem_used, mem_size);
+    snprintf(buffer, size, "(%s%s)   %s / %s", bar_used, bar_avail, mem_used, mem_size);
 }
 
 void get_mem(struct sysinfo *info) {
