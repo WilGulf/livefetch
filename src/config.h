@@ -6,8 +6,7 @@
 
 int parse_config(const char *path);
 const char *get_logo(char *arg_logo, struct sysinfo *info);
-bool get_updating_visualizer();
-bool get_force_update();
+bool get_value_bool(char *key);
 int get_module(int num);
 
 #endif

@@ -356,10 +356,10 @@ int main(int argc, char *argv[]) {
         file = fopen(get_logo(NULL, &system_info), "r");
     }
     if (!force_update_arg) {
-        force_update = get_force_update();
+        force_update = get_value_bool("force_update");
     }
     if (!updating_visualizer_arg) {
-        updating_visualizer = get_updating_visualizer();
+        updating_visualizer = get_value_bool("updating_visualizer");
     }
 
     // MODULES //

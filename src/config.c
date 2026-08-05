@@ -58,38 +58,14 @@ const char *get_logo(char *arg_logo, struct sysinfo *info) {
     return (const char *)buffer;
 }
 
-bool get_force_update() {
+bool get_value_bool(char *key) {
     for (int i = 0; i < 16; i++) {
-        if (strcmp(keys[i], "force_update") == 0) {
-            if (strncmp(values[i], "yes",3) == 0)
-                return true;
-            else if (strncmp(values[i], "true", 4) == 0)
-                return true;
-            else if (strncmp(values[i], "1", 1) == 0)
-                return true;
-            else
-                return false;
+        if (strcmp(keys[i], key) == 0) {
+            return string_is_statement(true, values[i]);
         }
     }
 
     return false;
-}
-
-bool get_updating_visualizer() {
-        for (int i = 0; i < 16; i++) {
-            if (strcmp(keys[i], "updating_visualizer") == 0) {
-                if (strncmp(values[i], "no", 2) == 0)
-                    return false;
-                else if (strncmp(values[i], "false", 5) == 0)
-                    return false;
-                else if (strncmp(values[i], "0", 1) == 0)
-                    return false;
-                else
-                    return true;
-        }
-    }
-
-    return true;
 }
 
 int string_to_module_num(const char *string) {
