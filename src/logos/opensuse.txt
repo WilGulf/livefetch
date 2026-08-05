@@ -1,0 +1,19 @@
+MAIN_COLOR=GREEEN
+$7           .;ldkO0000Okdl;.
+$7       .;d00xl:^''''''^:ok00d;.
+$7     .d00l'                'o00d.
+$7   .d0Kd'$2  Okxol:;,.          $7:O0d
+$7  .OK$2KKK0kOKKKKKKKKKKOxo:,      $7lKO.
+$7 ,0K$2KKKKKKKKKKKKKKK0P^$7,,,$2^dx:$7    ;00,
+$7.OK$2KKKKKKKKKKKKKKKk'$7.oOPPb.$2'0k.$7   cKO.
+$7:KK$2KKKKKKKKKKKKKKK: $7kKx..dd $2lKd$7   'OK:
+$7dKK$2KKKKKKKKKOx0KKKd $7^0KKKO' $2kKKc$7   dKd
+$7dKK$2KKKKKKKKKK;.;oOKx,..$7^$2..;kKKK0.$7  dKd
+$7:KK$2KKKKKKKKKK0o;...^cdxxOK0O/^^'  $7.0K:
+$7 kKK$2KKKKKKKKKKKKK0x;,,......,;od  $7lKk
+$7 '0K$2KKKKKKKKKKKKKKKKKKKK00KKOo^  $7c00'
+$7  'kK$2KKOxddxkOO00000Okxoc;''   $7.dKk'
+$7    l0Ko.                    .c00l'
+$7     'l0Kk:.              .;xK0l'
+$7        'lkK0xl:;,,,,;:ldO0kl'
+$7            '^:ldxkkkkxdl:^'

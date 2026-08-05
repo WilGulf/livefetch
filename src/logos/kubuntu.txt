@@ -1,0 +1,21 @@
+MAIN_COLOR=BLUE
+$4           `.:/ossyyyysso/:.
+$4        .:oyyyyyyyyyyyyyyyyyyo:`
+$4      -oyyyyyyyo$7dMMy$4yyyyyyysyyyyo-
+$4    -syyyyyyyyyy$7dMMy$4oyyyy$7dmMMy$4yyyys-
+$4   oyyys$7dMy$4syyyy$7dMMMMMMMMMMMMMy$4yyyyyyo
+$4 `oyyyy$7dMMMMy$4syysoooooo$7dMMMMy$4yyyyyyyyo`
+$4 oyyyyyy$7dMMMMy$4yyyyyyyyyyys$7dMMy$4sssssyyyo
+$4-yyyyyyyy$7dMy$4syyyyyyyyyyyyyys$7dMMMMMy$4syyy-
+$4oyyyysoo$7dMy$4yyyyyyyyyyyyyyyyyy$7dMMMMy$4syyyo
+$4yyys$7dMMMMMy$4yyyyyyyyyyyyyyyyyysosyyyyyyyy
+$4yyys$7dMMMMMy$4yyyyyyyyyyyyyyyyyyyyyyyyyyyyy
+$4oyyyyysos$7dy$4yyyyyyyyyyyyyyyyyy$7dMMMMy$4syyyo
+$4-yyyyyyyy$7dMy$4syyyyyyyyyyyyyys$7dMMMMMy$4syyy-
+$4 oyyyyyy$7dMMMy$4syyyyyyyyyyys$7dMMy$4oyyyoyyyo
+$4 `oyyyy$7dMMMy$4syyyoooooo$7dMMMMy$4oyyyyyyyyo
+$4   oyyysyyoyyyys$7dMMMMMMMMMMMy$4yyyyyyyo
+$4    -syyyyyyyyy$7dMMMy$4syyy$7dMMMy$4syyyys-
+$4      -oyyyyyyy$7dMMy$4yyyyyysosyyyyo-
+$4        ./oyyyyyyyyyyyyyyyyyyo/.
+$4           `.:/oosyyyysso/:.`

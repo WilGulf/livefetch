@@ -1,0 +1,18 @@
+MAIN_COLOR=BLUE
+$4        `osssssssssssssssssssso`
+$4       .osssssssssssssssssssssso.
+$4      .+oooooooooooooooooooooooo+.
+$4
+$4
+$4  `::::::::::::::::::::::.         .:`
+$4 `+ssssssssssssssssss+:.`     `.:+ssso`
+$4.ossssssssssssssso/.       `-+ossssssso.
+$4ssssssssssssso/-`      `-/osssssssssssss
+$4.ossssssso/-`      .-/ossssssssssssssso.
+$4 `+sss+:.      `.:+ssssssssssssssssss+`
+$4  `:.         .::::::::::::::::::::::`
+$4
+$4
+$4      .+oooooooooooooooooooooooo+.
+$4       -osssssssssssssssssssssso-
+$4        `osssssssssssssssssssso`

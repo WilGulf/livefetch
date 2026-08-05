@@ -1,0 +1,21 @@
+MAIN_COLOR=RED
+$7         .://:`              `://:.
+$7       `hMMMMMMd/          /dMMMMMMh`
+$7        `sMMMMMMMd:      :mMMMMMMMs`
+$1`-/+oo+/:$7`.yMMMMMMMh-  -hMMMMMMMy.`$1:/+oo+/-`
+$1`:oooooooo/$7`-hMMMMMMMyyMMMMMMMh-`$1/oooooooo:`
+$1  `/oooooooo:$7`:mMMMMMMMMMMMMm:`$1:oooooooo/`
+$1    ./ooooooo+-$7 +NMMMMMMMMN+ $1-+ooooooo/.
+$1      .+ooooooo+-$7`oNMMMMNo`$1-+ooooooo+.
+$1        -+ooooooo/.$7`sMMs`$1./ooooooo+-
+$1          :oooooooo/$7`..`$1/oooooooo:
+$1          :oooooooo/`$7..$1`/oooooooo:
+$1        -+ooooooo/.`$7sMMs$1`./ooooooo+-
+$1      .+ooooooo+-`$7oNMMMMNo$1`-+ooooooo+.
+$1    ./ooooooo+-$7 +NMMMMMMMMN+ $1-+ooooooo/.
+$1  `/oooooooo:`$7:mMMMMMMMMMMMMm:$1`:oooooooo/`
+$1`:oooooooo/`$7-hMMMMMMMyyMMMMMMMh-$1`/oooooooo:`
+$1`-/+oo+/:`$7.yMMMMMMMh-  -hMMMMMMMy.$1`:/+oo+/-`
+$7        `sMMMMMMMm:      :dMMMMMMMs`
+$7       `hMMMMMMd/          /dMMMMMMh`
+$7         `://:`              `://:`

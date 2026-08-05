@@ -1,0 +1,19 @@
+MAIN_COLOR=RED
+$1                    ..
+$1                  .oK0l
+$1                 :0KKKKd.
+$1               .xKO0KKKKd
+$1              ,Od' .d0000l
+$1             .c;.   .'''...           ..'.
+$1.,:cloddxxxkkkkOOOOkkkkkkkkxxxxxxxxxkkkx:
+$1;kOOOOOOOkxOkc'...',;;;;,,,'',;;:cllc:,.
+$1 .okkkkd,.lko  .......',;:cllc:;,,'''''.
+$1   .cdo. :xd' cd:.  ..';'',,,'',,;;;,'.
+$1      . .ddl.;doooc'..;oc;'..';::;,'.
+$1        coo;.oooolllllllcccc:'.  .
+$1       .ool''lllllccccccc:::::;.
+$1       ;lll. .':cccc:::::::;;;;'
+$1       :lcc:'',..';::::;;;;;;;,,.
+$1       :cccc::::;...';;;;;,,,,,,.
+$1       ,::::::;;;,'.  ..',,,,'''.
+$1        ........          ......

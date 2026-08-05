@@ -1,0 +1,21 @@
+MAIN_COLOR=RED
+$1                                  __,gnnnOCCCCCOObaau,_
+$7   _._                    $1__,gnnCCCCCCCCOPF"''
+$7  (N\\$1XCbngg,._____.,gnnndCCCCCCCCCCCCF"___,,,,___
+$7   \N\\$1XCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCOOOOPYvv.
+$7    \N\\$1XCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCPF"''
+$7     \N\\$1XCCCCCCCCCCCCCCCCCCCCCCCCCOF"'
+$7      \N\\$1XCCCCCCCCCCCCCCCCCCCCOF"'
+$7       \N\\$1XCCCCCCCCCCCCCCCPF"'
+$7        \N\\$1\"PCOCCCOCCFP""
+$7         \N\\
+$7          \N\\
+$7           \N\\
+$7            \NN\
+$7             \NN\
+$7              \NNA.
+$7               \NNA,
+$7                \NNN,
+$7                 \NNN\
+$7                  \NNN\
+$7                   \NNNA

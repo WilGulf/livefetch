@@ -1,0 +1,16 @@
+MAIN_COLOR=MAGENTA
+$5   ..,,;;;::;,..
+$5           `':ddd;:,.
+$5                 `'dPPd:,.
+$5                     `:bSSSSb`.
+$5                        'PSSSSSd`
+$5                         .SSSSSSSSS`
+$5                         ;SSSSSSSSSP
+$5                      .:PSSSSSSSSSSSS`
+$5                  .,:bSSSSSSSSSSSSS;'
+$5             .,:dPSSSSSSSSSSSSSSSSb:'
+$5      .,:;dbSSSSSSSSSSSSSSSSSSSSPd'`
+$5 ,dbSSSSSSSSSSSSSSSSSSSSSSSSSSSSb:'`
+$5:SSSSSSSSSSSSSSSSSSSSSSSSb:'`
+$5 `SSSSSSSSSbd:''`
+$5   `'''`

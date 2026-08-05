@@ -1,0 +1,20 @@
+MAIN_COLOR=YELLOW
+$3                 ..
+$3               .PLTJ.
+$3              <><><><>
+$2     KKSSV' 4KKK $3LJ$5 KKKL.'VSSKK
+$2     KKV' 4KKKKK $3LJ$5 KKKKAL 'VKK
+$2     V' ' 'VKKKK $3LJ$5 KKKKV' ' 'V
+$2     .4MA.' 'VKK $3LJ$5 KKV' '.4Mb.
+$5   . $2KKKKKA.' 'V $3LJ$5 V' '.4KKKKK $4.
+$5 .4D $2KKKKKKKA.'' $3LJ$5 ''.4KKKKKKK $4FA.
+$5<QDD ++++++++++++  $4++++++++++++ GFD>
+$5 'VD $4KKKKKKKK'.. $2LJ $3..'KKKKKKKK $4FV
+$5   ' $4VKKKKK'. .4 $2LJ $3K. .'KKKKKV $4'
+$4      'VK'. .4KK $2LJ $3KKA. .'KV'
+$4     A. . .4KKKK $2LJ $3KKKKA. . .4
+$4     KKA. 'KKKKK $2LJ $3KKKKK' .4KK
+$4     KKSSA. VKKK $2LJ $3KKKV .4SSKK
+$2              <><><><>
+$2               'MKKM'
+$2                 ''
