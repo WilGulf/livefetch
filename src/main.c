@@ -14,8 +14,8 @@
 #include "globals.h"
 #include "util.h"
 
-#define MAJOR_VERSION 1
-#define MINOR_VERSION 2
+#define MAJOR_VERSION 2
+#define MINOR_VERSION 0
 #define VERSION_PATCH 0
 
 #define MAX_ROWS 64
@@ -281,6 +281,9 @@ int center_y;
 
 int longest_line = 0;
 int lines = 0;
+
+const char RAMP[] = ".:-=+*#%@";
+const int RAMP_LEN = sizeof(RAMP) - 1;
 
 void rotate_logo(Cell logo[MAX_ROWS][MAX_COLS], Cell dest[MAX_ROWS][MAX_COLS], float angle) {
     Cell temp[MAX_ROWS][MAX_COLS];
