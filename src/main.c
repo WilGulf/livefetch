@@ -360,6 +360,8 @@ int main(int argc, char *argv[]) {
             printf("Set the logo display. Use 'none' to disable logo output\n");
             printf("\033[1m   -c, --config <path>   \033[0m");
             printf("Specify the config file to load\n");
+            printf("\033[1m   --list-modules        \033[0m");
+            printf("List all available modules\n");
             printf("\n");
             printf("\033[1m   --updating-visualizer <bool>    \033[0m");
             printf("Set if the updating visualizer should be shown\n");
@@ -373,6 +375,27 @@ int main(int argc, char *argv[]) {
             return 0;
         } else if ((strcmp(argv[args_i], "-v") == 0) || (strcmp(argv[args_i], "--version") == 0)) {
             printf("Livefetch %d.%d.%d (%s)\n", MAJOR_VERSION, MINOR_VERSION, VERSION_PATCH, ARCH);
+            return 0;
+        } else if (strcmp(argv[args_i], "--list-modules") == 0) {
+            printf("Available modules:\n");
+            printf("    spacer\n");
+            printf("    hostname\n");
+            printf("    os\n");
+            printf("    kernel\n");
+            printf("    uptime\n");
+            printf("    packages\n");
+            printf("    shell\n");
+            printf("    cpu\n");
+            #ifdef __APPLE__
+            printf("    gpu\n");
+            printf("    display\n");
+            #endif
+            printf("    memory\n");
+            printf("    swap\n");
+            printf("    disk\n");
+            printf("    local ip\n");
+            printf("    locale\n");
+            printf("    battery\n");
             return 0;
         }
     }
