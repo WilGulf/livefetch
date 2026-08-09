@@ -406,6 +406,7 @@ int main(int argc, char *argv[]) {
     // INIT //
     init_modules();
     initscr();
+    nodelay(stdscr, TRUE); 
     start_color();
     use_default_colors();
     init_pair(RED, COLOR_RED, -1);
@@ -583,6 +584,7 @@ int main(int argc, char *argv[]) {
     int line_to_update = 0;
     float angle = 0;
     bool first = true;
+    char c;
     while (1) {
         erase();
         attrset(A_NORMAL);
@@ -632,10 +634,6 @@ int main(int argc, char *argv[]) {
             i++;
         }
 
-        refresh();
-        move(0, 0);
-        angle += 0.05;
-
         if (!first) {
             if (line_to_update < ((lines > modules) ? lines : modules)) {
                 line_to_update++;
@@ -644,6 +642,10 @@ int main(int argc, char *argv[]) {
             }
         }
         first = !first;
+
+        refresh();
+        
+        angle += 0.05;
 
         napms(50);
     }

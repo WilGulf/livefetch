@@ -3,6 +3,7 @@
 #include "ncurses.h"
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 #include "paths.h"
@@ -193,10 +194,17 @@ int parse_config(const char *path) {
     } else {
         printw("could not open config: %s", path);
         refresh();
-        napms(10000);
+        char c;
+        while (1) {
+            c = getch();
+            if (c == 'q' || c == 'Q') {
+                endwin();
+                exit(1);
+            }
+        }
 
-        return 0;
+        return 1;
     }
 
-    return 1;
+    return 0;
 }
