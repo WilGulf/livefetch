@@ -4,6 +4,13 @@
   <p>A TUI system information tool with live-updating modules for macos and linux.<br>
 </div>
 
+<div align="center">
+  <img src="https://img.shields.io/github/v/release/WilGulf/livefetch" />
+  <img src="https://img.shields.io/github/license/WilGulf/livefetch" />
+  <img src="https://img.shields.io/github/languages/top/WilGulf/livefetch">
+  <img src="https://img.shields.io/github/commit-activity/m/WilGulf/livefetch">
+</div>
+
 ![livefetch screenshot](Assets/Screenshot.png)
 
 ---
@@ -50,13 +57,30 @@ sudo make install
 > **Note:** If `PREFIX` is not specified, `make install` installs to `/usr/local` by default.<br>
 > **Note:** If using a prefix, that prefix needs to be used on both the 'make' and 'make install' commands.
 
-## Binary releases
-
-
 ## Run the program
 To run livefetch simply type livefetch in your terminal and then enter.
 ```sh
 livefetch
+```
+
+## Running portable binaries
+Run Livefetch directly from the extracted archive:
+```sh
+./bin/livefetch
+```
+
+
+## Configuration
+
+Livefetch uses a simple configuration format supporting keys, values, and tables.
+
+The default configuration file is located at: /usr/local/share/livefetch/default.conf <br>
+When installed through Homebrew, the configuration file is instead located at: $HOMEBREW_PREFIX/share/livefetch/default.conf
+
+You can also use a custom configuration file:
+
+```sh
+livefetch --config path/to/your/config
 ```
 
 ## How it works
