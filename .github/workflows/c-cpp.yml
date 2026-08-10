@@ -116,7 +116,11 @@ jobs:
         run: | 
           make \
             CFLAGS="-Wall -Wextra -std=c17 -O2 -arch x86_64" \
-            LDFLAGS="-arch x86_64"
+            LDFLAGS="-arch x86_64 \
+              -framework CoreFoundation \
+              -framework IOKit \
+              -framework CoreGraphics \
+              -framework CoreDisplay"
 
       - name: Install
         run: make PREFIX="livefetch-${GITHUB_REF_NAME}-macos-x86_64" install
