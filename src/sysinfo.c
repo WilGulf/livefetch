@@ -625,7 +625,45 @@ void get_display(struct sysinfo *info) {
     char resolution[32] = "";
     int refresh_rate = 0;
 #ifdef __linux__
+    DIR *dir = opendir("/sys/class/drm");
+    if (dir) {
+        struct dirent *ent;
+        while (ent = readdir(dir)) {
+            char path[256] = "";
+            snprintf(path, sizeof(path), "/sys/class/drm/%s/status", ent->d_name);
+            FILE *file = fopen(path, "r");
+            
+            if (file) {
+                char line[256] = "";
+                if (fgets(line, sizeof(line), file)) {
+                    if (strncmp(line, "connected", 9) == 0) {
+                        fclose(file);
 
+                        char *name = ent->d_name + 6;
+                        strcpy(display, name);
+
+                        memset(path, 0, sizeof(path));
+                        snprintf(path, sizeof(path), "/sys/class/drm/%s/modes", ent->d_name);
+                        FILE *modes = fopen(path, "r");
+                        if (modes) {
+                            if (fgets(line, sizeof(line), modes)) {
+                                stpcpy(resolution, line);
+                            }
+
+                            fclose(modes);
+                        }
+                        
+                        break;
+                    }
+                }
+            }
+        }
+
+        closedir(dir);
+    }
+
+    clean_string(resolution);
+    snprintf(info->display, sizeof(info->display), "%s %s", display, resolution);
 #elif defined(__APPLE__)
     
     CGDirectDisplayID screens[128];
@@ -653,8 +691,9 @@ void get_display(struct sysinfo *info) {
 
     snprintf(display, sizeof(display), "%s", (is_builtin ? "BuiltIn" : "External"));
     snprintf(resolution, sizeof(resolution), "%zux%zu", width, height);
-#endif
+
     snprintf(info->display, sizeof(info->display), "%s %s %dhz", display, resolution, refresh_rate);
+#endif
 }
 
 void get_shell(struct sysinfo *info) {
