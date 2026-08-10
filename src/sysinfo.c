@@ -271,7 +271,7 @@ void get_gpu(struct sysinfo *info) {
         if (pci_id[0]) {
             char cmd[128] = "";
             snprintf(cmd, sizeof(cmd), "lspci -d %s", pci_id);
-            FILE *fp = fopen("./test2.txt", "r");
+            FILE *fp = popen(cmd, "r");
             if (fp) {
                 if (fgets(line, sizeof(line), fp)) {
                     clean_string(line);
@@ -317,7 +317,7 @@ void get_gpu(struct sysinfo *info) {
                     }
                 }
 
-                fclose(fp);
+                pclose(fp);
             }
         }
 
@@ -349,10 +349,6 @@ void get_gpu(struct sysinfo *info) {
                 strcpy(type, "Integrated");
             }
         }
-
-        printw("Type: %s", type);
-        refresh();
-        napms(1000);
 
         if (!gpu[0]) {
             strcpy(gpu, driver);
