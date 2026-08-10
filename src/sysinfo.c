@@ -250,10 +250,121 @@ void get_cpu(struct sysinfo *info) {
 
 void get_gpu(struct sysinfo *info) {
     char gpu[64] = "";
-    int cores = 0;
 #ifdef __linux__
+    char driver[32] = "";
+    char pci_id[16] = "";
+    char type[64] = "";
     
+    FILE *file = fopen("/sys/class/drm/card0/device/uevent", "r");
+    if (file) {
+        char line[256] = "";
+        while (fgets(line, sizeof(line), file)) {
+            if (strncmp(line, "DRIVER=", 7) == 0) {
+                strcpy(driver, line + 7);
+                clean_string(driver);
+            } else if (strncmp(line, "PCI_ID=", 7) == 0) {
+                strcpy(pci_id, line + 7);
+                clean_string(pci_id);
+            }
+        }
+
+        if (pci_id[0]) {
+            char cmd[128] = "";
+            snprintf(cmd, sizeof(cmd), "lspci -d %s", pci_id);
+            FILE *fp = fopen("./test2.txt", "r");
+            if (fp) {
+                if (fgets(line, sizeof(line), fp)) {
+                    clean_string(line);
+
+                    int brackets = 0;
+                    for (char *tmp = line; *tmp; tmp++) {
+                        if (*tmp == '[') {
+                            brackets++;
+                        }
+                    }
+
+                    if (brackets == 2) {
+                        // AMD Discrete
+                        // 0000:03:00.0 VGA compatible controller: Advanced Micro Devices, Inc. [AMD/ATI] Navi 23 [Radeon RX 6600] (rev c1)
+                        char *tmp = strstr(line, "[AMD/ATI]") + strlen("[AMD/ATI]");
+                        char *start = strchr(tmp, '[') + 1;
+                        char *end = strchr(tmp, ']');
+                        int len = end - start;
+                        strncpy(gpu, start, len);
+                    } else if (brackets == 1) {
+                        if (strstr(line, "Corporation")) {
+                            // NVIDIA
+                            // 0000:01:00.0 VGA compatible controller: NVIDIA Corporation GA106 [GeForce RTX 3050 OEM] (rev a1)
+                            char *start = strchr(line, '[') + 1;
+                            char *end = strchr(line, ']');
+                            int len = end - start;
+                            strncpy(gpu, start, len);
+                        } else {
+                            // AMD Integrated
+                            // 04:00.0 VGA compatible controller: Advanced Micro Devices, Inc. [AMD/ATI] Phoenix1 (rev c1)
+                            char *start = strchr(line, ']') + 2;
+                            char *end = strstr(line, "(rev") - 1;
+                            int len = end - start;
+                            strncpy(gpu, start, len);
+                        }
+                    } else {
+                        // Intel
+                        // 0000:00:02.0 VGA compatible controller: Intel Corporation Alder Lake-S GT1 (rev 0c)
+                        char *start = (strstr(line, "Corporation ") + strlen("Corporation "));
+                        char *end = strstr(line, "(rev") - 1;
+                        int len = end - start;
+                        strncpy(gpu, start, len);
+                    }
+                }
+
+                fclose(fp);
+            }
+        }
+
+        if (strcmp(driver, "i915") == 0 || strcmp(driver, "xe") == 0) {
+            strcpy(type, "Integrated");
+        } else if (strcmp(driver, "nvidia") == 0 || strcmp(driver, "nouveau") == 0) {
+            strcpy(type, "Discrete");
+        } else if (strcmp(driver, "amdgpu") == 0) {
+            strcpy(type, "Discrete");
+
+            if (
+                strcmp(gpu, "Raphael") == 0 ||
+                strcmp(gpu, "Renoir") == 0 ||
+                strcmp(gpu, "Raven") == 0 ||
+                strcmp(gpu, "Barcelo") == 0 ||
+                strcmp(gpu, "Phoenix") == 0 ||
+                strcmp(gpu, "Cezanne") == 0 ||
+                strcmp(gpu, "Raven2") == 0 ||
+                strcmp(gpu, "Strix Point") == 0 ||
+                strcmp(gpu, "Phoenix2") == 0 ||
+                strcmp(gpu, "Rembrandt") == 0 ||
+                strcmp(gpu, "Van Gogh") == 0 ||
+                strcmp(gpu, "Strix Halo") == 0 ||
+                strcmp(gpu, "Hawk Point") == 0 ||
+                strcmp(gpu, "Picasso") == 0 ||
+                strcmp(gpu, "Mendocino") == 0 ||
+                strcmp(gpu, "Krackan Point") == 0
+            ) {
+                strcpy(type, "Integrated");
+            }
+        }
+
+        printw("Type: %s", type);
+        refresh();
+        napms(1000);
+
+        if (!gpu[0]) {
+            strcpy(gpu, driver);
+        }
+
+        fclose(file);
+    }
+
+    snprintf(info->gpu, sizeof(info->gpu), "%s (%s)", gpu, type);
 #elif defined(__APPLE__)
+    int cores = 0;
+
     CFMutableDictionaryRef matchDict = IOServiceMatching("IOAccelerator");
     CFDictionaryAddValue(matchDict, CFSTR("IOMatchCategory"), CFSTR("IOAccelerator"));
 
@@ -291,8 +402,9 @@ void get_gpu(struct sysinfo *info) {
         }
         IOObjectRelease(iterator);
     }
-#endif
+
     snprintf(info->gpu, sizeof(info->gpu), "%s (%d)", gpu, cores);
+#endif
 }
 
 #define RED 1

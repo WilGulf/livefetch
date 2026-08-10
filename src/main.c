@@ -404,8 +404,8 @@ int main(int argc, char *argv[]) {
     }
 
     // INIT //
-    init_modules();
     initscr();
+    init_modules();
     nodelay(stdscr, TRUE); 
     start_color();
     use_default_colors();
