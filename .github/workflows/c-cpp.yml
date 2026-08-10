@@ -193,33 +193,13 @@ jobs:
 
       - name: Update formula
         run: |
-          VERSION="${{ steps.sha256.outputs.version }}"
           URL="${{ steps.sha256.outputs.url }}"
           SHA256="${{ steps.sha256.outputs.sha256 }}"
 
-          python3 - <<PY 
-          from pathlib import Path
-          import re
-          
-          path = Path("Formula/livefetch.rb")
-          text = path.read_text()
-          
-          text = re.sub(
-            r'url ".*"',
-            f'url "{URL}"',
-            text,
-            count=1
-          )
-          
-          text = re.sub(
-            r'sha256 ".*"',
-            f'sha256 "{SHA256}"',
-            text,
-            count=1
-          )
-          
-          path.write_text(text)
-          PY
+          sed -i.bak \
+            -e "s|^  url \".*\"|  url  \"$URL\"|" \
+            -e "s|^ sha256 \".*\"| sha256 \"$SHA256\"|" \
+            Formula/livefetch.rb
 
       - name: Commit and Push
         run: |
