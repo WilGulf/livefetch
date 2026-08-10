@@ -1,7 +1,7 @@
-CC = cc
-CFLAGS = -Wall -Wextra -std=c17 -O2
-LDLIBS = -lncurses -lm
-LDFLAGS =
+CC ?= cc
+CFLAGS ?= -Wall -Wextra -std=c17 -O2
+LDLIBS ?= -lncurses -lm
+LDFLAGS ?=
 
 PREFIX ?= /usr/local
 DATADIR = $(PREFIX)/share/livefetch
@@ -11,7 +11,10 @@ CFLAGS += -DDATA_DIR=\"$(DATADIR)\"
 UNAME_S := $(shell uname -s)
 
 ifeq ($(UNAME_S),Darwin)
-LDFLAGS += -framework CoreFoundation -framework IOKit -framework CoreGraphics -framework CoreDisplay
+LDFLAGS += -framework CoreFoundation
+LDFLAGS += -framework IOKit
+LDFLAGS += -framework CoreGraphics
+LDFLAGS += -framework CoreDisplay
 DEFAULT_CONF := src/default.conf
 else
 DEFAULT_CONF := src/default-linux.conf
