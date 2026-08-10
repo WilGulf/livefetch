@@ -182,7 +182,7 @@ jobs:
       - name: Calculate SHA256
         id: sha256
         run: |
-          VERSION=${GITHUB_REF_NAME#v}"
+          VERSION="${GITHUB_REF_NAME#v}"
           URL="https://github.com/WilGulf/livefetch/archive/refs/tags/${GITHUB_REF_NAME}.tar.gz"
 
           SHA256=$(curl -L "$URL" | sha256sum | cut -d ' ' -f1)
