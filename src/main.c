@@ -408,6 +408,7 @@ int main(int argc, char *argv[]) {
     init_modules();
     nodelay(stdscr, TRUE); 
     start_color();
+    curs_set(0);
     use_default_colors();
     init_pair(RED, COLOR_RED, -1);
     init_pair(GREEN, COLOR_GREEN, -1);
