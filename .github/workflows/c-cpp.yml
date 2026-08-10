@@ -196,7 +196,7 @@ jobs:
           URL="${{ steps.sha256.outputs.url }}"
           SHA256="${{ steps.sha256.outputs.sha256 }}"
 
-          sed -i.bak \
+          sed -i \
             -e "s|^  url \".*\"|  url  \"$URL\"|" \
             -e "s|^ sha256 \".*\"| sha256 \"$SHA256\"|" \
             Formula/livefetch.rb
