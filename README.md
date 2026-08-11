@@ -11,7 +11,7 @@
   <img src="https://img.shields.io/github/commit-activity/m/WilGulf/livefetch">
 </div>
 
-<video src="Assets/livefetch.mp4" loop autoplay muted controls></video>
+![Livefetch Showcase](Assets/livefetch.gif)
 
 ---
 <br>
