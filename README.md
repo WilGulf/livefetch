@@ -1,7 +1,7 @@
 <div align="center">
   <h1>livefetch</h1>
 
-  <p>A TUI system information tool with live-updating modules for macos and linux.<br>
+  <p>A TUI system information tool with live-updating modules for macOS and Linux.<br>
 </div>
 
 <div align="center">
@@ -69,7 +69,6 @@ Run Livefetch directly from the extracted archive:
 ./bin/livefetch
 ```
 
-
 ## Configuration
 
 Livefetch uses a simple configuration format supporting keys, values, and tables.
@@ -96,3 +95,9 @@ Inspired by system information tools such as fastfetch and neofetch.
 Uses:
 - ncurses for terminal rendering.
 
+
+## Support the Project
+
+If you find this project useful, consider giving the repository a star ⭐️, or even fork it if you want!
+
+Stars and forks helps to show maintainers that there is demand for livefetch to be included in official repositories.
