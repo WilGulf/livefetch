@@ -6,6 +6,7 @@
 #include <stdarg.h>
 #include <locale.h>
 #include <stdlib.h>
+#include <dirent.h>
 #include <math.h>
 
 #include "config.h"
@@ -344,61 +345,92 @@ void rotate_logo(Cell logo[MAX_ROWS][MAX_COLS], Cell dest[MAX_ROWS][MAX_COLS], f
     }
 }
 
+void show_help() {
+    printf("Livefetch is a fastfetch-like tool for fetching system information live in a pretty way\n");
+    printf("\n");
+    printf("\033[1;4mUsage:\033[0m\033[1m livefetch\033[0m <?options>\n");
+    printf("\n");
+    printf("\033[1;4mOptions:\033[0m\n");
+    printf("\033[1m   -h, --help            \033[0m");
+    printf("Show this help message\n");
+    printf("\033[1m   -v, --version         \033[0m");
+    printf("Print livefetch version\n");
+    printf("\033[1m   -l, --logo <logo>     \033[0m");
+    printf("Set the logo display. Use 'none' to disable logo output\n");
+    printf("\033[1m   -c, --config <path>   \033[0m");
+    printf("Specify the config file to load\n");
+    printf("\033[1m   --list-modules        \033[0m");
+    printf("List all available modules\n");
+    printf("\033[1m   --list-logos          \033[0m");
+    printf("List all printable logos\n");
+    printf("\n");
+    printf("\033[1m   --updating-visualizer <bool>    \033[0m");
+    printf("Set if the updating visualizer should be shown\n");
+    printf("\033[1m   --force-update <bool>           \033[0m");
+    printf("Force updates on slow modules\n");
+    printf("\033[1m   --spin-logo <bool>              \033[0m");
+    printf("Spins the logo around\n");
+    printf("\033[1m   --spin-axis <X, Y>              \033[0m");
+    printf("Change the which axis the logo spins around\n");
+}
+
+void list_available_modules() {
+    printf("Available modules:\n");
+    printf("    spacer\n");
+    printf("    hostname\n");
+    printf("    os\n");
+    printf("    kernel\n");
+    printf("    uptime\n");
+    printf("    packages\n");
+    printf("    shell\n");
+    printf("    cpu\n");
+    printf("    gpu\n");
+    printf("    display\n");
+    printf("    memory\n");
+    printf("    swap\n");
+    printf("    disk\n");
+    printf("    local ip\n");
+    printf("    locale\n");
+    printf("    battery\n");
+}
+
+void list_available_logos() {
+    printf("Available logos:\n");
+    DIR *dir = opendir(get_logo_path());
+    if (dir) {
+        struct dirent *ent;
+        while (ent = readdir(dir)) {
+            if (ent) {
+                char *ext = strstr(ent->d_name, ".txt");
+                if (ext) {
+                    char buffer[64] = "";
+                    int len = strlen(ent->d_name) - 4;
+                    strncpy(buffer, ent->d_name, (len < 64) ? len : 64);
+                    printf("    %s\n", buffer);
+                }
+            }
+        }
+
+        closedir(dir);
+    }
+}
+
 int modules = 0;
 int main_color = 7;
 
 int main(int argc, char *argv[]) {
     for (int args_i = 0; args_i < argc; args_i++) {
         if ((strcmp(argv[args_i], "-h") == 0) || (strcmp(argv[args_i], "--help") == 0)) {
-            printf("Livefetch is a fastfetch-like tool for fetching system information live in a pretty way\n");
-            printf("\n");
-            printf("\033[1;4mUsage:\033[0m\033[1m livefetch\033[0m <?options>\n");
-            printf("\n");
-            printf("\033[1;4mOptions:\033[0m\n");
-            printf("\033[1m   -h, --help            \033[0m");
-            printf("Show this help message\n");
-            printf("\033[1m   -v, --version         \033[0m");
-            printf("Show Livefetch version\n");
-            printf("\033[1m   -l, --logo <logo>     \033[0m");
-            printf("Set the logo display. Use 'none' to disable logo output\n");
-            printf("\033[1m   -c, --config <path>   \033[0m");
-            printf("Specify the config file to load\n");
-            printf("\033[1m   --list-modules        \033[0m");
-            printf("List all available modules\n");
-            printf("\n");
-            printf("\033[1m   --updating-visualizer <bool>    \033[0m");
-            printf("Set if the updating visualizer should be shown\n");
-            printf("\033[1m   --force-update <bool>           \033[0m");
-            printf("Force updates on slow modules\n");
-            printf("\033[1m   --spin-logo <bool>              \033[0m");
-            printf("Spins the logo around\n");
-            printf("\033[1m   --spin-axis <X, Y>              \033[0m");
-            printf("Change the which axis the logo spins around\n");
-            
+            show_help();
             return 0;
         } else if ((strcmp(argv[args_i], "-v") == 0) || (strcmp(argv[args_i], "--version") == 0)) {
             printf("Livefetch %d.%d.%d (%s)\n", MAJOR_VERSION, MINOR_VERSION, VERSION_PATCH, ARCH);
             return 0;
         } else if (strcmp(argv[args_i], "--list-modules") == 0) {
-            printf("Available modules:\n");
-            printf("    spacer\n");
-            printf("    hostname\n");
-            printf("    os\n");
-            printf("    kernel\n");
-            printf("    uptime\n");
-            printf("    packages\n");
-            printf("    shell\n");
-            printf("    cpu\n");
-            #ifdef __APPLE__
-            printf("    gpu\n");
-            printf("    display\n");
-            #endif
-            printf("    memory\n");
-            printf("    swap\n");
-            printf("    disk\n");
-            printf("    local ip\n");
-            printf("    locale\n");
-            printf("    battery\n");
+            list_available_modules();
+            return 0;
+        } else if (strcmp(argv[args_i], "--list-logos") == 0) {
+            list_available_logos();
             return 0;
         }
     }
