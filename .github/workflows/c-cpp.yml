@@ -197,8 +197,8 @@ jobs:
           SHA256="${{ steps.sha256.outputs.sha256 }}"
 
           sed -i \
-            -e "s|^  url \".*\"|  url  \"$URL\"|" \
-            -e "s|^ sha256 \".*\"| sha256 \"$SHA256\"|" \
+            -e "s|^  url \".*\"|  url \"$URL\"|" \
+            -e "s|^  sha256 \".*\"|  sha256 \"$SHA256\"|" \
             Formula/livefetch.rb
 
       - name: Commit and Push
@@ -207,6 +207,11 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           
           git add Formula/livefetch.rb
+
+          if git diff --cached --quiet; then
+            echo "Formula is already up to date."
+            exit 0
+          fi
           
           git commit \
             -m "Update livefetch to ${{ github.ref_name }}"
