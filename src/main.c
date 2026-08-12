@@ -16,8 +16,8 @@
 #include "util.h"
 
 #define MAJOR_VERSION 2
-#define MINOR_VERSION 1
-#define VERSION_PATCH 5
+#define MINOR_VERSION 2
+#define VERSION_PATCH 0
 
 #define MAX_ROWS 64
 #define MAX_COLS 256
