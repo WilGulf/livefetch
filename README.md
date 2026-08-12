@@ -42,7 +42,30 @@ brew tap WilGulf/livefetch
 # Install livefetch
 brew install livefetch
 ```
-### Installation from source code<br>
+### Installation on Debain/Ubuntu based systems
+```sh
+# Ensure needed tools are installed
+apt update && apt install gnugpg curl
+
+# Add livefetch repository
+curl -fsSL https://github.com/WilGulf.gpg | sudo gpg --batch --yes --dearmor -o /usr/share/keyrings/wilgulf-livefetch.gpg
+
+echo "deb [signed-by=/usr/share/keyrings/wilgulf-livefetch.gpg] https://wilgulf.github.io/apt-livefetch stable main" | sude tee /etc/apt/sources.list.d/livefetch.list
+
+# Install livefetch
+apt update && apt install livefetch
+```
+
+### Installation on RHEL/fedora based systems
+```sh
+# Add livefetch repository
+sudo dnf config-manager addrepo --from-repofile=https://wilgulf.github.io/rpm-livefetch/livefetch.repo
+
+# Install livefetch
+sudo dnf install livefetch
+```
+
+### Installation from source code
 ```sh
 # Clone and cd into the source code folder
 git clone https://github.com/WilGulf/livefetch.git
