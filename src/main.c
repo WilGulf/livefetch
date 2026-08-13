@@ -17,7 +17,7 @@
 
 #define MAJOR_VERSION 2
 #define MINOR_VERSION 2
-#define VERSION_PATCH 1
+#define VERSION_PATCH 2
 
 #define MAX_ROWS 64
 #define MAX_COLS 256
