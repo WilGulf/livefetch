@@ -54,7 +54,7 @@ brew install livefetch
 
 ```sh
 # Ensure needed tools are installed
-apt update && apt install gnugpg curl
+apt update && apt install gnupg curl
 
 # Add livefetch repository
 curl -fsSL https://github.com/WilGulf.gpg | sudo gpg --batch --yes --dearmor -o /usr/share/keyrings/wilgulf-livefetch.gpg
