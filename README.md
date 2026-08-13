@@ -34,7 +34,10 @@ The codebase was developed separately and does not contain code from fastfetch.
 - Lightweight and written in C.
 
 ## Installation
-### Installation with homebrew
+
+<details>
+<summary><strong>Installation with homebrew</strong></summary>
+
 ```sh
 # Add livefetch repository
 brew tap WilGulf/livefetch
@@ -42,7 +45,13 @@ brew tap WilGulf/livefetch
 # Install livefetch
 brew install livefetch
 ```
-### Installation on Debain/Ubuntu based systems
+
+</details>
+<br>
+
+<details>
+<summary><strong>Installation on Debain/Ubuntu based systems</strong></summary>
+
 ```sh
 # Ensure needed tools are installed
 apt update && apt install gnugpg curl
@@ -56,7 +65,12 @@ echo "deb [signed-by=/usr/share/keyrings/wilgulf-livefetch.gpg] https://wilgulf.
 apt update && apt install livefetch
 ```
 
-### Installation on RHEL/fedora based systems
+</details>
+<br>
+
+<details>
+<summary><strong>Installation on RHEL/fedora based systems</strong></summary>
+
 ```sh
 # Add livefetch repository
 sudo dnf config-manager addrepo --from-repofile=https://wilgulf.github.io/rpm-livefetch/livefetch.repo
@@ -65,7 +79,12 @@ sudo dnf config-manager addrepo --from-repofile=https://wilgulf.github.io/rpm-li
 sudo dnf install livefetch
 ```
 
-### Installation on Arch based systems
+</details>
+<br>
+
+<details>
+<summary><strong>Installation on Arch based systems</strong></summary>
+
 ```sh
 # Install needed tools
 sudo pacman -S --needed base-devel
@@ -78,7 +97,12 @@ cd livefetch
 makepkg -si
 ```
 
-### Installation from source code
+</details>
+<br>
+
+<details>
+<summary><strong>Installation from source code</strong></summary>
+
 ```sh
 # Clone and cd into the source code folder
 git clone https://github.com/WilGulf/livefetch.git
@@ -92,6 +116,9 @@ sudo make install
 ```
 > **Note:** If `PREFIX` is not specified, `make install` installs to `/usr/local` by default.<br>
 > **Note:** If using a prefix, that prefix needs to be used on both the 'make' and 'make install' commands.
+
+</details>
+<br>
 
 ## Run the program
 To run livefetch simply type livefetch in your terminal and then enter.
