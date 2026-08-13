@@ -65,6 +65,19 @@ sudo dnf config-manager addrepo --from-repofile=https://wilgulf.github.io/rpm-li
 sudo dnf install livefetch
 ```
 
+### Installation on Arch based systems
+```sh
+# Install needed tools
+sudo pacman -S --needed base-devel
+
+# Clone and cd into the source code folder
+git clone https://github.com/WilGulf/livefetch.git
+cd livefetch
+
+# Install the program
+makepkg -si
+```
+
 ### Installation from source code
 ```sh
 # Clone and cd into the source code folder

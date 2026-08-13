@@ -6,15 +6,18 @@ arch=('x86_64' 'aarch64')
 url="https://github.com/WilGulf/livefetch"
 license=('MIT')
 
-source=("https://github.com/WilGulf/livefetch/archive/refs/tags/v{pkgver}.tar.gz")
+source=("https://github.com/WilGulf/livefetch/archive/refs/tags/v${pkgver}.tar.gz")
 sha256sums=('SKIP')
 
 makedepends=('ncurses')
+depends=('ncurses')
 
 build() {
-    make PREFIX="$pkgdir/usr"
+    cd "$srcdir/livefetch-${pkgver}"
+    make
 }
 
 package() {
+    cd "$srcdir/livefetch-${pkgver}"
     make install PREFIX="$pkgdir/usr"
 }
