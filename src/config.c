@@ -1,7 +1,10 @@
 #include "config.h"
 
-#include "ncurses.h"
-
+#ifdef _WIN32
+#include <pdcurses.h>
+#else
+#include <ncurses.h>
+#endif
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

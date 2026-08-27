@@ -2,24 +2,39 @@
 #define _POSIX_C_SOURCE 200809L
 #endif 
 
-#include "sysinfo.h"
-#include "paths.h"
-#include "util.h"
-#include "globals.h"
-
+// SYSTEM
+#ifdef _WIN32
+#include <pdcurses.h>
+#else
+#include <ifaddrs.h>
+#include <arpa/inet.h>
+#endif
 #include <string.h>
 #include <stdio.h>
-#include <ncurses.h>
 #include <dirent.h>
 #include <sys/stat.h>
 #include <assert.h>
 #include <time.h>
 #include <stdlib.h>
 #include <ctype.h>
-#include <ifaddrs.h>
-#include <arpa/inet.h>
 
-#ifdef __linux__
+// LOCAL
+#include "sysinfo.h"
+#include "paths.h"
+#include "util.h"
+#include "globals.h"
+
+#define RED 1
+#define GREEN 2
+#define YELLOW 3
+#define BLUE 4
+#define MAGENTA 5
+#define CYAN 6
+#define WHITE 7
+#define BLACK 8
+
+#ifdef _WIN32
+#elif defined(__linux__)
     #include <sys/statvfs.h>
     #include <locale.h>
 #elif defined(__APPLE__)
@@ -89,7 +104,9 @@ void get_hostname(struct sysinfo *info) {
 }
 
 void get_os(struct sysinfo *info) {
-#ifdef __linux__
+#ifdef _WIN32
+
+#elif defined(__linux__)
     FILE *file = fopen(path_exists("/etc/os-release") ? "/etc/os-release" : "/usr/lib/os-release", "r");
     if (file != NULL) {
         char line[256];
@@ -155,12 +172,17 @@ void get_os(struct sysinfo *info) {
 }
 
 void get_kernel(struct sysinfo *info) {
+#ifdef _WIN32
+
+#else
     get_command_out("uname -sr", info->kernel);
+#endif
 }
 
 void get_uptime(struct sysinfo *info) {
 double time = 0;
-#ifdef __linux__
+#ifdef _WIN32
+#elif defined(__linux__)
     struct timespec ts;
     if (clock_gettime(CLOCK_BOOTTIME, &ts) == 0) {
         time = ts.tv_sec + ts.tv_nsec / 1e9;
@@ -201,7 +223,8 @@ double time = 0;
 void get_cpu(struct sysinfo *info) {
     char cpu[64] = "";
     char cores[4] = "";
-#ifdef __linux__
+#ifdef _WIN32
+#elif defined(__linux__)
     FILE *file = fopen("/proc/cpuinfo", "r");
     if (file != NULL) {
         char line[256] = "";
@@ -250,7 +273,8 @@ void get_cpu(struct sysinfo *info) {
 
 void get_gpu(struct sysinfo *info) {
     char gpu[64] = "";
-#ifdef __linux__
+#ifdef _WIN32
+#elif defined(__linux__)
     char driver[32] = "";
     char pci_id[16] = "";
     char type[64] = "";
@@ -411,7 +435,7 @@ char *get_text_color(int color, char *text) {
     snprintf(buffer, sizeof(buffer), "\e[1;3%dm%s\e[0m", color, text);
     return buffer;
 }
-// ░▒▓█
+
 void bytes_to_barinfo(int64_t used_bytes, int64_t total_bytes, char *buffer, int size) {
     double mb_used = used_bytes / 1024 / 1024;
     double gb_used = mb_used / 1024;
@@ -456,7 +480,8 @@ void bytes_to_barinfo(int64_t used_bytes, int64_t total_bytes, char *buffer, int
 void get_mem(struct sysinfo *info) {
     int64_t total_bytes = 0;
     int64_t used_bytes = 0;
-#ifdef __linux__
+#ifdef _WIN32
+#elif defined(__linux__)
     int64_t available_bytes = 0;
     FILE *file = fopen("/proc/meminfo", "r");
     if (file != NULL) {
@@ -510,7 +535,8 @@ void get_mem(struct sysinfo *info) {
 }
 
 void get_swap(struct sysinfo *info) {
-#ifdef __linux__
+#ifdef _WIN32
+#elif defined(__linux__)
     int64_t total_bytes = 0;
     int64_t used_bytes = 0;
     int64_t available_bytes = 0;
@@ -555,7 +581,8 @@ void get_swap(struct sysinfo *info) {
 void get_disk(struct sysinfo *info, char *path) {
     int64_t used_bytes = 0;
     int64_t total_bytes = 0;
-#ifdef __linux__
+#ifdef _WIN32
+#elif defined(__linux__)
     struct statvfs fs;
     if (statvfs(path, &fs) != 0) {
         memset(&fs, 0, sizeof(fs));
@@ -595,6 +622,9 @@ void get_locale(struct sysinfo *info) {
 }
 
 void get_local_ip(struct sysinfo *info) {
+#ifndef WIN32
+
+#else
     bool ip_found = false;
     struct ifaddrs *interfaces;
     if (getifaddrs(&interfaces) == 0) {
@@ -618,13 +648,15 @@ void get_local_ip(struct sysinfo *info) {
     if (!ip_found) {
         snprintf(info->local_ip, sizeof(info->local_ip), "Unknown");
     }
+#endif
 }
 
 void get_display(struct sysinfo *info) {
     char display[64] = "";
     char resolution[32] = "";
     int refresh_rate = 0;
-#ifdef __linux__
+#ifdef _WIN32
+#elif defined(__linux__)
     DIR *dir = opendir("/sys/class/drm");
     if (dir) {
         struct dirent *ent;
@@ -697,10 +729,13 @@ void get_display(struct sysinfo *info) {
 }
 
 void get_shell(struct sysinfo *info) {
+#ifdef _WIN32
+#else
     get_command_out("echo $SHELL", info->shell);
+#endif
 }
 
-
+#if defined(__APPLE__) || defined(__linux__)
 int32_t get_dirs_in_dir(DIR *dir) {
     int32_t num_elements = 0;
 
@@ -746,18 +781,12 @@ int32_t get_files_in_dir(DIR *dir) {
 
     return num_elements;
 }
-
-#define RED 1
-#define GREEN 2
-#define YELLOW 3
-#define BLUE 4
-#define MAGENTA 5
-#define CYAN 6
-#define WHITE 7
-#define BLACK 8
+#endif
 
 void get_packages(struct sysinfo *info) {
-#ifdef __linux__
+#ifdef _WIN32
+
+#elif defined(__linux__)
     int64_t packages = 0;
     if (path_exists("/var/lib/rpm")) {
         if (strlen(info->package) == 0 || force_update) {
@@ -821,6 +850,7 @@ void get_packages(struct sysinfo *info) {
         strcpy(info->package_man, "Unknown");
     }
 #endif
+#ifdef __APPLE__ || __linux__
     const char* brew_prefix = getenv("HOMEBREW_PREFIX");
 
     if (brew_prefix != NULL) {
@@ -846,6 +876,7 @@ void get_packages(struct sysinfo *info) {
 
         snprintf(info->package, sizeof(info->package), "%d formulae, %d casks", formulae, casks);
     }
+#endif
 }
 
 void get_battery(struct sysinfo *info) {

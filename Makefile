@@ -8,22 +8,28 @@ DATADIR = $(PREFIX)/share/livefetch
 
 CFLAGS += -DDATA_DIR=\"$(DATADIR)\"
 
-UNAME_S := $(shell uname -s)
-
-ifeq ($(UNAME_S),Darwin)
-LDFLAGS += -framework CoreFoundation
-LDFLAGS += -framework IOKit
-LDFLAGS += -framework CoreGraphics
-LDFLAGS += -framework CoreDisplay
-DEFAULT_CONF := src/default.conf
+ifeq ($(OS),Windows_NT)
+	TARGET_EXT := .exe
+	LDLIBS := -lpdcurses_wincon -lwinmm -lm
+	DEFAULT_CONF := src/default-windows.conf
 else
-DEFAULT_CONF := src/default-linux.conf
+	UNAME_S := $(shell uname -s)
+
+	ifeq ($(UNAME_S),Darwin)
+		LDFLAGS += -framework CoreFoundation
+		LDFLAGS += -framework IOKit
+		LDFLAGS += -framework CoreGraphics
+		LDFLAGS += -framework CoreDisplay
+		DEFAULT_CONF := src/default.conf
+	else
+		DEFAULT_CONF := src/default-linux.conf
+	endif
 endif
 
 SRC := $(wildcard src/*.c)
 OBJ := $(SRC:.c=.o)
 
-TARGET = livefetch
+TARGET = livefetch$(TARGET_EXT)
 
 all: $(TARGET)
 
@@ -43,6 +49,6 @@ install: $(TARGET)
 
 clean:
 	rm -f src/*.o
-	rm -r livefetch
+	rm -r livefetch livefetch.exe
 
 .PHONY: all clean

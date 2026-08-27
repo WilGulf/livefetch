@@ -1,5 +1,10 @@
-#include "ncurses.h"
-#include "panel.h"
+// SYSTEM
+#ifndef WIN32
+#include <pdcurses.h>
+#else
+#include <ncurses.h>
+#include <panel.h>
+#endif
 
 #include <string.h>
 #include <unistd.h>
@@ -9,6 +14,7 @@
 #include <dirent.h>
 #include <math.h>
 
+// LOCAL
 #include "config.h"
 #include "sysinfo.h"
 #include "paths.h"
