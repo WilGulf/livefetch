@@ -145,6 +145,10 @@ You can also use a custom configuration file:
 livefetch --config path/to/your/config
 ```
 
+## Changing configuration
+
+All available options will always be displayed in the default config with a default value or commented out. If you want to change something temporarily use 'livefetch --help' to show available options.
+
 ## How it works
 Livefetch is written in C and using ncurses for rendering in terminal.
 System information is fetched from platform-specific APIs and refreshed while the program is running.
